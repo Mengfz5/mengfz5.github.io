@@ -1,13 +1,13 @@
 ---
 # Display name
-title: 吳健雄
+title: 孟凡政  
 
 # Name pronunciation (optional)
-name_pronunciation: Chien Shiung Wu
+name_pronunciation: FanZheng Meng         
 
 # Full name (for SEO)
-first_name: Shiung Wu
-last_name: Chien
+first_name: FanZheng     
+last_name: Meng  
 
 # Status emoji
 status:
