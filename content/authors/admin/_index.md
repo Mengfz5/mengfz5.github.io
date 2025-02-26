@@ -51,7 +51,11 @@ interests:
   - Quantum information
   - AI
 
-education:
+education:    
+  -area: 
+
+  -area:
+  
   - area: BSc Physics  
     institution: Huazhong University of science and technology    
     date_start: 2022-09-01
