@@ -59,12 +59,12 @@ education:
     summary: |
       
    
-  - area: MEng Artificial Intelligence
-    institution: Massachusetts Institute of Technology
-    date_start: 2016-01-01
-    date_end: 2020-12-31
+  - area: master
+    institution: to be updated
+    date_start: 
+    date_end: 
     summary: |
-      GPA: 3.8/4.0
+      
 
       Courses included:
       - lorem ipsum dolor sit amet, consectetur adipiscing elit
