@@ -58,9 +58,7 @@ education:
     date_end: 
     summary: |
       
-    button:
-      text: 'Read Thesis'
-      url: 'https://example.com'
+   
   - area: MEng Artificial Intelligence
     institution: Massachusetts Institute of Technology
     date_start: 2016-01-01
