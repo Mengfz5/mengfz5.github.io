@@ -32,14 +32,12 @@ sections:
           parallax: false
   - block: markdown
     content:
-      title: '📚 My Research'
+      title: '📚 My Research Interests'
       subtitle: ''
       text: |-
-        Use this area to speak to your mission. I'm a research scientist in the Moonshot team at DeepMind. I blog about machine learning, deep learning, and moonshots.
-
-        I apply a range of qualitative and quantitative methods to comprehensively investigate the role of science and technology in the economy.
+        I'm now working on symmetry analysis of unconventional superconductor aiming to conceive the G-L free energy with the coupling of triplet superconductors and dipole interaction.  In this project, I use group theory to analyse the symmetry of system and study the microscopic mechanism using Green's function method. Also I write python code to help me calculate the C-G coefficients for decomposition of reducible representation of the symmetry group.
         
-        Please reach out to collaborate 😃
+        I aspire for new knowledge and have the passion to pursue new researches. I have the ability to think and learn independently and enjoy discussing academic problems with fellows.
     design:
       columns: '1'
   - block: collection

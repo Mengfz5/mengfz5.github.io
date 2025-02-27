@@ -67,7 +67,7 @@ education:
       
 
       
-  - area: BSc Physics  
+  - area: BSc Physics(minor CS)
     institution: Huazhong University of science and technology    
     date_start: 2022-09-01
     date_end: 2026-07-01
