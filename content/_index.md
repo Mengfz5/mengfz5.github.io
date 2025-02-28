@@ -1,7 +1,7 @@
 ---
 # Leave the homepage title empty to use the site title
-title: ""
-date: 2022-10-24
+title: "Meng's homepage"
+date: 2025-03-01
 type: landing
 
 design:
@@ -41,15 +41,21 @@ sections:
     design:
       columns: '1'
   - block: collection
-    id: papers
+    id: section-1
     content:
-      title: Research Presentation
+      title: Section 1
+      subtitle: A subtitle
+      text: Add any **markdown** formatted content here - text, images, videos, galleries - and even HTML code!
+      # Display content from the `content/post/` folder
       filters:
         folders:
-          - publication
-        featured_only: true
+          - post
     design:
-      view: card
-      columns: 2
+      # Choose how many columns the section has. Valid values: '1' or '2'.
+      columns: '1'
+      # Choose your content listing view - here we use the `showcase` view
+      view: showcase
+      # For the Showcase view, do you want to flip alternate rows?
+      flip_alt_rows: true
 
 ---
