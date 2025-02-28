@@ -46,8 +46,6 @@ sections:
       subtitile: ''
       text: |-
       -symmetry of the order parameter for high-temperature superconductivity.
-    design:
-      columns: '1'
   - block: collection
     id: papers
     content:
