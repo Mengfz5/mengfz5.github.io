@@ -29,7 +29,7 @@ featured: true
 
 links:
 - name: Custom Link
-  url: http://example.org
+  url: ''
 url_pdf:  ''
 url_code: ''
 url_dataset: ''
@@ -62,7 +62,7 @@ projects:
 slides: example
 ---
 
-See more infomation check my [presentation beamer](/static/uploads/resume.pdf)
+See more infomation check my {{% staticref "uploads/presentation.pdf" "newtab" %}}beamer{{% /staticref %}}
 
 {{% callout note %}}
 Create your slides in Markdown - click the *Slides* button to check out the example.
