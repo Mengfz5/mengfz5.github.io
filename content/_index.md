@@ -45,13 +45,9 @@ sections:
       title: 'Presentation ppt'
       subtitile: ''
       text: |-
-        - 
+        - Click to view the [PDF document](/files/presentation.pdf).
     design:
       columns: '1'
-    
-
-    Click to view the [PDF document](/files/presentation.pdf).
-
   - block: collection
     id: papers
     content:
