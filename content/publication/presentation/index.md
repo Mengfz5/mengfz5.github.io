@@ -61,8 +61,7 @@ projects:
 #   Otherwise, set `slides: ""`.
 slides: example
 ---
-
-See more infomation check my {{% staticref "uploads/presentation.pdf" "newtab" %}}beamer{{% /staticref %}}
+See more infomation check my 
 
 {{% callout note %}}
 Create your slides in Markdown - click the *Slides* button to check out the example.
