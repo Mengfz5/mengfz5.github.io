@@ -46,11 +46,14 @@ sections:
       subtitile: ''
       text: |-
         - 
-      button:
-        text: Download CV
-        url: uploads/resume.pdf
     design:
       columns: '1'
+    ---
+    title: My Page
+    ---
+
+    Click to view the [PDF document](/files/presentation.pdf).
+
   - block: collection
     id: papers
     content:
