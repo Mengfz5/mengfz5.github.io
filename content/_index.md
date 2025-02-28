@@ -45,8 +45,12 @@ sections:
       title: 'Presentation ppt'
       subtitile: ''
       text: |-
-          
-      
+        - 
+      button:
+        text: Download CV
+        url: uploads/resume.pdf
+    design:
+      columns: '1'
   - block: collection
     id: papers
     content:
