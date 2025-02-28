@@ -62,7 +62,7 @@ projects:
 slides: example
 ---
 
-See more infomation check my [presentation beamer](/content/publication/presetation/presentation.pdf)
+See more infomation check my [presentation beamer](uploads/resume.pdf)
 
 {{% callout note %}}
 Create your slides in Markdown - click the *Slides* button to check out the example.
