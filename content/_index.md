@@ -41,12 +41,12 @@ sections:
     design:
       columns: '1'
   - block: collection
-    id: papers
+    id: post
     content:
       title: Research Presentation
       filters:
         folders:
-          - publication
+          - post
         featured_only: true
     design:
       view: article-grid
