@@ -40,5 +40,11 @@ sections:
         I aspire for new knowledge and have the passion to pursue new researches. I have the ability to think and learn independently and enjoy discussing academic problems with fellows.
     design:
       columns: '1'
+  - block: markdown
+    content:
+      title: Research Presentation
+        
+    design:
+      columns: 1
 
 ---
