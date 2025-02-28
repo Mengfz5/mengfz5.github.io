@@ -45,7 +45,7 @@ sections:
       title: 'Presentation ppt'
       subtitile: ''
       text: |-
-      -symmetry of the order parameter for high-temperature superconductivity. [pdf files](docs/presentation.pdf)
+      
   - block: collection
     id: papers
     content:
