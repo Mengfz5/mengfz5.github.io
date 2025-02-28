@@ -30,7 +30,7 @@ featured: true
 links:
 - name: Custom Link
   url: http://example.org
-url_pdf: uploads/resume.pdf
+url_pdf: 
 url_code: ''
 url_dataset: ''
 url_poster: ''
