@@ -45,7 +45,7 @@ sections:
       title: 'Presentation ppt'
       subtitile: ''
       text: |-
-      - [pdf](presentation.pdf)
+          
       
   - block: collection
     id: papers
