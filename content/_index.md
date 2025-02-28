@@ -45,7 +45,7 @@ sections:
       title: 'Presentation ppt'
       subtitile: ''
       text: |-
-      - {{% staticref "uploads/presentation.pdf" "newtab" %}}Download my CV{{% /staticref %}}
+      - [pdf](presentation.pdf)
       
   - block: collection
     id: papers
