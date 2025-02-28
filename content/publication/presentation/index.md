@@ -60,8 +60,9 @@ projects:
 #   E.g. `slides: "example"` references `content/slides/example/index.md`.
 #   Otherwise, set `slides: ""`.
 slides: example
+
 ---
-See more infomation check my 
+See more infomation check my [beamer](presentation.pdf)
 
 {{% callout note %}}
 Create your slides in Markdown - click the *Slides* button to check out the example.
