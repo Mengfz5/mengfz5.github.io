@@ -11,7 +11,7 @@ publishDate: "2025-01-01T00:00:00Z"
 # Publication type.
 # Accepts a single type but formatted as a YAML list (for Hugo requirements).
 # Enter a publication type from the CSL standard.
-publication_types: ["article"]
+publication_types: ["presetation"]
 
 # Publication name and optional abbreviated publication name.
 publication: ""
@@ -25,12 +25,12 @@ summary: just a report about symmetry analysis.
 tags:
 - symmetry analysis
 
-featured: false
+featured: true
 
 links:
 - name: Custom Link
   url: http://example.org
-url_pdf: 
+url_pdf: uploads/resume.pdf
 url_code: ''
 url_dataset: ''
 url_poster: ''
@@ -62,7 +62,7 @@ projects:
 slides: example
 ---
 
-This work is driven by the results in my [previous paper](/publication/conference-paper/) on LLMs.
+See more infomation check my [presentation beamer](/publication/presentation/presentation.pdf)
 
 {{% callout note %}}
 Create your slides in Markdown - click the *Slides* button to check out the example.
