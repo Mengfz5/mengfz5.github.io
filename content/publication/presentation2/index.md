@@ -17,13 +17,13 @@ publication_types: ["presetation"]
 publication: ""
 publication_short: ""
 
-abstract: just a report about symmetry analysis.
+abstract: This report started from BCS theory. After defining gap functions and deriving the  self-consistant equation, we introduce superconductor phase transition as a conclution of symmetry breaking. We also analyse the coexistence of antiferromagnetism and superconductivity using Green's function method. 
 
 # Summary. An optional shortened abstract.
-summary: just a report about symmetry analysis.
+summary: This report started from BCS theory. After defining gap functions and deriving the  self-consistant equation, we introduce superconductor phase transition as a conclution of symmetry breaking. We also analyse the coexistence of antiferromagnetism and superconductivity using Green's function method. 
 
 tags:
-- symmetry analysis
+- Phnomenological theory
 
 featured: true
 
