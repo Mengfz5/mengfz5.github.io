@@ -17,10 +17,10 @@ publication_types: ["presetation"]
 publication: ""
 publication_short: ""
 
-abstract: just a report about symmetry analysis.
+abstract: The system we consider has some symmetry properties which can be compacted into a symmetry gorup. By analysing the symmetry group, we can simply write down the singlet and triplet superconductor free energy described by order parameters. There many mathmatical techniques used in this method such as decomposition of reducible representation, C-G formalism, etc.
 
 # Summary. An optional shortened abstract.
-summary: just a report about symmetry analysis.
+summary: The system we consider has some symmetry properties which can be compacted into a symmetry gorup. By analysing the symmetry group, we can simply write down the singlet and triplet superconductor free energy described by order parameters. There many mathmatical techniques used in this method such as decomposition of reducible representation, C-G formalism, etc.
 
 tags:
 - symmetry analysis
@@ -42,7 +42,7 @@ url_video: ''
 # Featured image
 # To use, add an image named `featured.jpg/png` to your page's folder. 
 image:
-  caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/s9CC2SKySJM)'
+  caption: ''
   focal_point: ""
   preview_only: false
 
