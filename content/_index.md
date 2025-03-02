@@ -46,8 +46,8 @@ sections:
       title: 'Presentation ppt'
       subtitle: ''
       text: |-
-        - Click to view the [PDF document](/files/presentation.pdf).
-        - Click to view the [PDF document](/files/presentation2.pdf).
+        - My first presentation(date:1.21). Click to view the [PDF document](/files/presentation.pdf).
+        - My second presentation(date:3.1). Click to view the [PDF document](/files/presentation2.pdf).
     design:
       columns: '1'
   
