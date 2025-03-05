@@ -40,6 +40,15 @@ sections:
         I aspire for new knowledge and have the passion to pursue new researches. I have the ability to think and learn independently and enjoy discussing academic problems with fellows.
     design:
       columns: '1'
+
+  - block: markdown
+    content:
+      title: 'Research Note'
+      subtitle: ''
+      text: |-
+        - Symmetry analysis for the free energy of superconductors. [click to see the note](/notes/Spin_radiation_triplet_superconductors (1).pdf)
+    design:
+      columns: '1'
   
   - block: markdown
     content:
