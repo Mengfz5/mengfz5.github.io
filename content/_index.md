@@ -46,7 +46,7 @@ sections:
       title: 'Research Note'
       subtitle: ''
       text: |-
-        - Symmetry analysis for the free energy of superconductors. [click to see the note](/notes/Spin_radiation_triplet_superconductors (1).pdf)
+        - Symmetry analysis for the free energy of superconductors. [click to see the note](/notes/note1.pdf)
     design:
       columns: '1'
   
