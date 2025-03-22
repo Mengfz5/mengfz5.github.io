@@ -1,0 +1,9 @@
+/* Adjust the width of columns in the Research Note block */
+.markdown-block .columns {
+  display: flex;
+  gap: 20px; /* Adjust the gap between columns */
+}
+
+.markdown-block .columns > div {
+  flex: 1; /* Equal width for both columns */
+}
