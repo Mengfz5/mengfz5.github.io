@@ -46,20 +46,12 @@ sections:
       title: 'Research Note'
       subtitle: ''
       text: |-
-         <div style="display: flex; gap: 20px;">
-          <div style="flex: 1;">
-            <h2>Symmetry analysis for the free energy of superconductors</h2>
-            <p><a href="/notes/note1.pdf">Click to see the note</a></p>
-            <h3>Abstract</h3>
-            <p><strong>This note explores the symmetry analysis of high-temperature superconductors using group theory, focusing on the Ginzburg-Landau free energy functional. We derive the order parameter transformations under the symmetry group \(G = G_0 \times U(1) \times T\) and analyze the decomposition of tensor products of irreducible representations, such as \(E_g \otimes E_g\) and \(E_1 \otimes E_2\), to identify invariant terms in the free energy. Both orthogonal and projection operator methods are employed to construct basis functions for irreducible representations, with explicit computational implementations provided. The note also discusses the generalization to triplet states in weak spin-orbit coupling for orthorhombic and tetragonal symmetries. Key questions regarding matrix representations, spin-orbit coupling effects, and gap functions are highlighted for further investigation. This work provides a systematic framework for understanding the symmetry constraints on the free energy functional in superconducting systems.</strong></p>
-          </div>
-          <div style="flex: 1;">
-            <h2>Another Research Note</h2>
-            <p><a href="/notes/note1.pdf">Click to see the note</a></p>
-            <h3>Abstract</h3>
-            <p><strong>This is the second research note, which discusses another topic related to superconductors...</strong></p>
-          </div>
-         </div>
+    
+        ## Symmetry analysis for the free energy of superconductors. [click to see the note](/notes/note1.pdf)
+
+         ### Abstract
+
+         **This note explores the symmetry analysis of high-temperature superconductors using group theory, focusing on the Ginzburg-Landau free energy functional. We derive the order parameter transformations under the symmetry group \(G = G_0 \times U(1) \times T\) and analyze the decomposition of tensor products of irreducible representations, such as \(E_g \otimes E_g\) and \(E_1 \otimes E_2\), to identify invariant terms in the free energy. Both orthogonal and projection operator methods are employed to construct basis functions for irreducible representations, with explicit computational implementations provided. The note also discusses the generalization to triplet states in weak spin-orbit coupling for orthorhombic and tetragonal symmetries. Key questions regarding matrix representations, spin-orbit coupling effects, and gap functions are highlighted for further investigation. This work provides a systematic framework for understanding the symmetry constraints on the free energy functional in superconducting systems.**
     design:
       columns: '1'
   
