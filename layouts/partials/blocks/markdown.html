@@ -1,0 +1,11 @@
+<div class="markdown-block" style="max-width: 800px; margin: 0 auto;">
+    {{ with .title }}
+      <h2>{{ . | markdownify | emojify }}</h2>
+    {{ end }}
+    {{ with .subtitle }}
+      <p>{{ . | markdownify | emojify }}</p>
+    {{ end }}
+    {{ with .text }}
+      <div>{{ . | markdownify | emojify }}</div>
+    {{ end }}
+  </div>
