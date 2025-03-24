@@ -1,5 +1,5 @@
 /* Increase the width of markdown block sections */
 .markdown-block {
-    max-width: 800px; /* Adjust this value as needed */
+    max-width: 1600px; /* Adjust this value as needed */
     margin: 0 auto;   /* Centers the content */
 }
