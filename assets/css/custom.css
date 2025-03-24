@@ -1,21 +1,5 @@
-/* Adjust the width of the main container */
-.container {
-  max-width: 1200px; /* Set your desired width */
-  margin: 0 auto;    /* Center the container */
-}
-
-/* Adjust the width of the content area */
-.content {
-  max-width: 1000px; /* Set your desired width */
-  margin: 0 auto;    /* Center the content */
-}
-
-/* Adjust the width of columns in the Research Note block */
-.markdown-block .columns {
-  display: flex;
-  gap: 20px; /* Adjust the gap between columns */
-}
-
-.markdown-block .columns > div {
-  flex: 1; /* Equal width for both columns */
+/* Increase the width of markdown block sections */
+.markdown-block {
+    max-width: 800px; /* Adjust this value as needed */
+    margin: 0 auto;   /* Centers the content */
 }
