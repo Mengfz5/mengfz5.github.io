@@ -15,3 +15,10 @@
 .flex.flex-col.items-center {
     width: 100%;
 }
+
+/* Two-column layout using CSS Grid */
+.markdown-block[data-columns="2"] .prose {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 2rem; /* Space between columns */
+}
