@@ -1,5 +1,17 @@
-/* Increase the width of markdown block sections */
-.markdown-block {
-    max-width: 1600px; /* Adjust this value as needed */
-    margin: 0 auto;   /* Centers the content */
+/* Override the max-width for markdown sections */
+#section-markdown {
+    max-width: 100% !important;
+    padding: 6rem 0 !important;
+    margin: 0 auto !important;
+}
+
+/* Override the max-width for the content container */
+.max-w-prose {
+    max-width: 100% !important;
+    padding: 0 20px; /* Add padding if needed */
+}
+
+/* Ensure the content inside the section is centered */
+.flex.flex-col.items-center {
+    width: 100%;
 }
