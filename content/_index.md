@@ -55,7 +55,7 @@ sections:
     design:
       columns: '1'
       css_class: markdown-block  # Add this line
-      css_style: "max-width: 800px; margin: 0 auto;"
+      css_style: "max-width: 100% !important; padding: 6rem 0; margin: 0 auto;"
   - block: markdown
     content:
       title: 'Presentation ppt'
