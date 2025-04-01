@@ -1,13 +1,13 @@
 /* Override the max-width for markdown sections */
 #section-markdown {
-    max-width: 100% !important;
+    max-width: 90% !important;
     padding: 6rem 0 !important;
     margin: 0 auto !important;
 }
 
 /* Override the max-width for the content container */
 .max-w-prose {
-    max-width: 100% !important;
+    max-width: 90% !important;
     padding: 0 20px; /* Add padding if needed */
 }
 

@@ -39,7 +39,7 @@ sections:
         
         I aspire for new knowledge and have the passion to pursue new researches. I have the ability to think and learn independently and enjoy discussing academic problems with fellows.
     design:
-      columns: '2'
+      columns: '1'
 
   - block: markdown
     content:
@@ -52,11 +52,17 @@ sections:
          ### Abstract
 
          **This note explores the symmetry analysis of high-temperature superconductors using group theory, focusing on the Ginzburg-Landau free energy functional. We derive the order parameter transformations under the symmetry group \(G = G_0 \times U(1) \times T\) and analyze the decomposition of tensor products of irreducible representations, such as \(E_g \otimes E_g\) and \(E_1 \otimes E_2\), to identify invariant terms in the free energy. Both orthogonal and projection operator methods are employed to construct basis functions for irreducible representations, with explicit computational implementations provided. The note also discusses the generalization to triplet states in weak spin-orbit coupling for orthorhombic and tetragonal symmetries. Key questions regarding matrix representations, spin-orbit coupling effects, and gap functions are highlighted for further investigation. This work provides a systematic framework for understanding the symmetry constraints on the free energy functional in superconducting systems.**
+
+         ## XXX model. [click to see the note](/notes/xxxmodel.pdf)
+
+         ### Abstract
+
+         **This note explores the one-dimensional antiferromagnetic Heisenberg (XXX) spin chain through the Bethe Ansatz framework. The model's \(SU(2)\) symmetry and conserved \(S^z\) enable exact solutions: magnon excitations emerge as plane-wave states, while multi-spin-flip sectors yield Bethe equations governing quasi-momenta \(k_j\) and phase shifts \(\theta(k_j, k_l)\). In the thermodynamic limit, complex rapidities organize into "strings," describing bound magnon states. For \(J = -1\), the ground state exhibits zero magnetization with density \(\rho_g(\lambda) = \frac{1}{4 \cosh(\pi \lambda/2)}\), while low-energy spinon excitations obey \(\epsilon(k) = \frac{\pi}{2} \sin k\). This synthesis of algebraic methods and physical insights underpins the integrability and critical behavior of quantum spin chains.**
     design:
       spacing:
         # Customize the section spacing. Order is top, right, bottom, left.
         padding: ['20px', '0', '20px', '0']
-      columns: '1'
+      columns: '2'
       css_class: markdown-block  # Add this line
       css_style: "max-width: 100% !important; padding: 6rem 0; margin: 0 auto;"
   - block: markdown
