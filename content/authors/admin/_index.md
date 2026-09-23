@@ -20,12 +20,12 @@ superuser: true
 highlight_name: true
 
 # Role/position/tagline
-role: Undergraduate Student in physics        
+role: PhD Student in Physics        
 
 # Organizations/Affiliations to display in Biography blox
 organizations:
-  - name: Huazhong University of science and technology    
-    url: https://english.hust.edu.cn/
+  - name: The University of Hong Kong    
+    url: https://www.hku.hk/
 
 # Social network links
 # Need to use another icon? Simply download the SVG icon to your `assets/media/icons/` folder.
@@ -47,26 +47,18 @@ profiles:
     url: https://orcid.org/
 
 interests:
-  - Condensed matter physics 
-  - Quantum information
-  - AI
+  - Cold atoms 
+  - Quantum simulation
+  - Quantum many-body physics
 
 education:
-  - area: PhD 
-    institution: to be updated
+  - area: PhD in Physics
+    institution: The University of Hong Kong
     date_start: 
     date_end: 
     summary: |
-      
-   
-  - area: master
-    institution: to be updated
-    date_start: 
-    date_end: 
-    summary: |
-      
+      Research direction: cold atoms.
 
-      
   - area: BSc Physics(minor CS)
     institution: Huazhong University of science and technology    
     date_start: 2022-09-01
@@ -150,6 +142,7 @@ awards:
 
 ## About Me
 
+I am a PhD student in Physics at The University of Hong Kong. My current research direction is cold atoms.
 
 
 

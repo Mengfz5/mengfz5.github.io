@@ -1,0 +1,11 @@
+# Hugo build artifacts
+/public/
+/resources/
+.hugo_build.lock
+hugo_stats.json
+
+# Local environment files
+.DS_Store
+
+# Local Hugo cache
+.cache/
