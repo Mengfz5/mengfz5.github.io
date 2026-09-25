@@ -2,7 +2,7 @@
 title: "Graduate Quantum Mechanics: Minimum Notes"
 authors:
   - admin
-date: 2026-09-23
+date: 2026-09-25
 summary: "Minimum review notes for PHYS8351 Graduate Quantum Mechanics, covering the supplied material through section 3.4. This note was generated with GPT assistance."
 tags:
   - graduate quantum mechanics
