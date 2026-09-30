@@ -1,9 +1,9 @@
 ---
-title: "Generalized Hydrodynamics: Minimum Note §§1–2.3"
+title: "Generalized Hydrodynamics: Concise Notes, §§1–2.3"
 authors:
   - admin
 date: 2026-09-25
-summary: "A compact minimum review note on generalized hydrodynamics, covering the introduction through section 2.3, with Appendix B used where needed."
+summary: "Concise review notes on generalized hydrodynamics, covering the introduction through section 2.3, with Appendix B used where needed."
 tags:
   - generalized hydrodynamics
   - GHD
@@ -22,9 +22,3 @@ This compact note studies generalized hydrodynamics through sections 1–2.3 of 
 The source note records an audit of the hydrodynamic derivation, including the apparent coefficient inconsistency in the source equations and the operator-ordering caveat in the quantum response discussion.
 
 [Read the PDF note](/notes/ghd-sections-1-to-2-3-minimal.pdf)
-
-Source note folder on my Mac:
-
-```text
-/Users/mengfanzheng/Documents/Mynotes/GHD
-```

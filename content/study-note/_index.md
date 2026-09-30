@@ -8,4 +8,4 @@ banner:
   image: ''
 ---
 
-A collection of my study notes on physics, mathematics, and related topics.
+A working collection of my study notes on cold atoms, quantum many-body physics, mathematical methods, and related topics. These notes are intended as learning records rather than authoritative references; please consult the cited literature and course materials before reusing results.
