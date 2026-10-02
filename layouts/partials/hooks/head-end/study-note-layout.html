@@ -1,0 +1,5 @@
+{{/* Scope the wider reading layout to mathematical study-note articles. */}}
+{{ if and (eq .Type "study-note") .IsPage .Params.math }}
+  {{ $css := resources.Get "css/study-note.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ end }}

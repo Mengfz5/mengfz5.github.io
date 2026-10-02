@@ -1,0 +1,17 @@
+/* Loaded only on mathematical study-note articles, never the homepage. */
+.hb-sidebar-container { display: none; }
+article main { max-width: 76rem; }
+article main > .prose { width: 100%; max-width: none; min-width: 0; }
+/* Keep long display equations intact and scroll locally, not the whole page. */
+article .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-block: 0.5rem;
+}
+article .katex-display > .katex { white-space: nowrap; }
+article .prose table { display: block; max-width: 100%; overflow-x: auto; }
+article .prose pre { max-width: 100%; overflow-x: auto; }
+@media (max-width: 767px) {
+  article main { padding-inline: 1rem; }
+}
