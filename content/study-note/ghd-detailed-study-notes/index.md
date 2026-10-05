@@ -3,7 +3,7 @@ title: "Diffusion in GHD — Detailed Study Notes"
 authors:
   - admin
 date: 2026-09-28
-summary: "Detailed Markdown notes on diffusion in generalized hydrodynamics, covering sections 2.1–2.5, Appendix B, and the opening of section 3.1 through state variables and dressing, Eq. (3.9)."
+summary: "A guided study of diffusion in generalized hydrodynamics through sections 2.1–2.5 and the opening of 3.1, with supporting derivations for susceptibility, transport sum rules, flux-Jacobian symmetry and Onsager invariance."
 tags:
   - generalized hydrodynamics
   - GHD
@@ -12,187 +12,787 @@ tags:
   - integrable systems
 featured: true
 math: true
-lastmod: 2026-10-04
+lastmod: 2026-10-05
 ---
 
 {{% callout note %}}
 This study note was generated with GPT assistance during guided reading, then source-checked and tutor-reviewed. It is a personal learning reference; verify equations, conventions, and interpretations against the original paper before citing or reusing it.
 {{% /callout %}}
 
-De Nardis, Bernard and Doyon, *SciPost Phys.* **6**, 049 (2019), arXiv:1812.00767v4.
+J. De Nardis, D. Bernard and B. Doyon, *Diffusion in generalized hydrodynamics and quasiparticle scattering*, SciPost Phys. **6**, 049 (2019), arXiv:1812.00767v4.
 
-**Coverage:** the introduction, §§2.1–2.5, Appendix B, and the opening of §3.1 through the state variables and dressing, Eq. (3.9). The rest of §§3–6 is left for our future discussion. This page records what we have worked through; consult the [original paper on arXiv](https://arxiv.org/abs/1812.00767) for the complete source.
+We have studied the introduction, §§2.1–2.5, Appendix B, and the opening of §3.1 through dressing, Eq. (3.9). This note follows that material in the order needed to understand the argument. The later sections appear only in the roadmap.
 
-**How to use this note:** read the physical explanation first, then reproduce the displayed derivation steps. Equations labelled with the paper's numbers can be located in the source, but the reasoning needed for the material covered here is written out below. New discussions are incorporated into the relevant conceptual section rather than appended as a conversation log. “Paper states” identifies an assertion in the article; “inference” identifies a consequence we draw from it; “outside perspective” identifies an illustrative calculation added for intuition.
+The [minimum note](/notes/ghd-sections-1-to-2-3-minimal.pdf) is the companion for quick review. Here we explain the reasoning in full sentences and work through the essential calculations. Longer supporting proofs are collected at the end, where you can return to them without losing the main story. The source-audit review records apparent discrepancies in the [paper on arXiv](https://arxiv.org/abs/1812.00767).
 
-**Later review:** the [minimum note](/notes/ghd-sections-1-to-2-3-minimal.pdf) selects the main storyline, important formulas, short derivation reminders, and essential cautions from this detailed account. “Minimum” means selective and useful for recall; it has no fixed page limit. Its current coverage is §§1–2.5.
+## 1. The question that connects everything
 
-## Reading map
+Imagine preparing an interacting integrable system with a slowly varying density profile. Perhaps one region contains more particles or energy than its surroundings. We want to predict how that profile changes: where its disturbances travel, how rapidly they spread, and which microscopic processes determine that spreading.
 
-### The problem that organizes the paper
+Euler generalized hydrodynamics already describes the leading propagation. Its quasiparticles move with effective velocities that depend on the surrounding state. Interactions therefore already affect Euler motion. The question of this paper is what happens at the next order: **how do we calculate the additional diffusive spreading?**
 
-Given a slowly varying initial state of an interacting integrable system, predict how its conserved-density profiles move and broaden. Euler GHD already describes propagation through state-dependent effective velocities. The missing ingredient is the leading diffusive correction and its microscopic origin.
+A simple packet gives a useful picture. If it travels at speed \(v\), its centre moves a distance \(vt\). If it also diffuses, its variance acquires a contribution proportional to \(t\), so its additional width grows as \(\sqrt t\). A density disturbance in a many-charge fluid can excite several velocities and split into different packets; the picture of one packet illustrates the distinction between propagation and broadening rather than describing every correlation profile.
 
-The central task is to compute the diffusion matrix \(\mathfrak D(\bar q)\) from the integrable model and insert it into
+The equation we want to make predictive is
+
 \[
 \partial_t\bar q_i+\partial_xF_i(\bar q)
 =\frac12\partial_x\!\left[
-\mathfrak D_i{}^j(\bar q)\partial_x\bar q_j\right]
- +\text{higher-gradient terms}.
+\mathfrak D_i{}^j(\bar q)\partial_x\bar q_j\right]. \tag{2.10}
 \]
-This is the hydrodynamic structure of Eq. (2.10). It is not yet a prediction until the state-dependent coefficients are supplied. The paper develops a formula for \(\mathfrak D\) using thermodynamics and quasiparticle scattering, subject to its hydrodynamic and form-factor assumptions.
 
-A useful physical sketch is a localized perturbation on a uniform background. Euler dynamics determines propagation, schematically a packet centre \(vt\). Diffusion gives additional variance growth of order \(t\), or width of order \(\sqrt t\) around propagation. In a many-charge fluid a perturbation can excite many modes and velocities; this single-packet sketch is an illustration, not an assertion that every density correlation is Gaussian or that its total width grows only as \(\sqrt t\).
+Here \(\bar q_i\) is a mean conserved density, \(F_i\) is its homogeneous current, and \(\mathfrak D_i{}^j\) is the diffusion matrix. We will define each carefully below. For now, the important point is that the matrix \(\mathfrak D\) is the missing input. Knowing the structure of the equation is only the beginning; we must calculate its coefficients from the microscopic model.
 
-### The route from the missing coefficient to the answer
+The paper divides this task into successive stages:
 
-Our explanatory order is:
-
-1. Specify the coefficient we need in the hydrodynamic equation.
-2. Relate that coefficient to measurable equilibrium current correlations.
-3. Describe the equilibrium state and its excitations in quasiparticle language.
-4. Evaluate the correlations and identify the scattering contribution to diffusion.
-5. Use the resulting coefficient to predict dissipative hydrodynamics.
-
-| Part of the paper | Question it answers | Output needed by the next part |
+| Part | Question answered | What we gain |
 | --- | --- | --- |
-| §2 | How can a hydrodynamic diffusion coefficient be extracted from microscopic correlations? | The bridge \(\mathfrak L=\mathfrak DC\), with \(\mathfrak L\) a current-correlation integral and \(C\) static susceptibility, in the paper's PT gauge |
-| §3 | How do we represent a stationary integrable state and calculate correlations in it? | Quasiparticle thermodynamics and thermodynamic particle–hole form factors; an Euler-scale check |
-| §4 | Which microscopic processes generate the diffusive contribution, and what is its value? | Diffusion from two-particle–hole contributions, interpreted through quasiparticle scattering |
-| §5 | How does the calculated diffusion enter the evolution of actual profiles? | GHD with diffusion, entropy increase, and applications to profile evolution |
-| §6 | What does the result predict for a concrete interacting spin chain? | Gapped XXZ spin diffusion, including half-filling |
+| §2 | How can microscopic equilibrium correlations determine a diffusion coefficient? | A relation between current fluctuations and the matrix in the hydrodynamic equation. |
+| §3 | How can we describe the equilibrium state and evaluate correlations in an integrable model? | Quasiparticle variables and a method based on excitations and form factors. |
+| §4 | Which processes contribute to diffusion, and what is their contribution? | A diffusion formula from two-particle–hole contributions, interpreted in terms of scattering. |
+| §5 | What evolution follows once this coefficient is known? | GHD with diffusion, entropy production, and examples of profile evolution. |
+| §6 | What does the theory predict for a concrete spin chain? | Spin diffusion in the gapped XXZ chain. |
 
-The §3–§6 entries are source-grounded previews from the introduction and section structure. Their formulas and assumptions remain to be worked through.
+The first stage does not require Bethe Ansatz. It establishes a general relation that the later integrable calculation can use. The previews of §§3–6 come from the paper's introduction and organization; we have not yet worked through their derivations. The paper itself assumes hydrodynamic closure and suitable properties of thermodynamic form factors.
 
-### Section 2 completes the bridge, not the microscopic calculation
+## 2. Section 2.1 — conservation tells us what is missing
 
-Start from the missing matrix \(\mathfrak D\). Section 2 makes it calculable by rewriting the task:
-\[
-\boxed{
-\text{compute }\mathfrak D
-\ \longleftarrow\
-\mathfrak D=\mathfrak LC^{-1}
-\ \longleftarrow\
-\text{compute equilibrium current correlations and }C.
-}
-\]
-The inverse is on the independent susceptibility sector, and the displayed identification follows the paper's PT gauge. Our ordered-quantum-correlation qualification remains in the detailed §2.4 discussion.
+### Why continuity does not close the problem
 
-| Subsection | Why we need it | What it contributes to the bridge |
-| --- | --- | --- |
-| §2.1 | Conservation fixes continuity but does not determine the current from a density profile | Introduce \(F\) and the missing first-gradient current coefficient \(\mathfrak D\), Eqs. (2.9)–(2.10) |
-| §2.2 | We need microscopic quantities that distinguish persistent transport from diffusion | Relate density spreading to current correlations by (2.13); define ballistic \(D\) and residual \(\mathfrak L\), (2.15)–(2.16) |
-| §2.3 | A correlation-defined coefficient is not automatically the coefficient in the hydrodynamic equation | Evolve density correlations and match their moments to \(\mathfrak D\), yielding (2.27) |
-| §2.4 | Local representatives of the same charge can give different gradient coefficients | Fix a PT-compatible density convention and obtain the simple bridge (2.35) |
-| §2.5 | The bridge should immediately explain a special transport constraint | If \(j_0=q_1\), the integrated current is conserved; its Onsager row and the corresponding diffusion row vanish |
-
-The density-correlation moments in §§2.2–2.3 are intermediate tools with a specific purpose: they let conservation translate microscopic current fluctuations into the coefficient of macroscopic spreading. Appendix B supports that translation from hydrodynamic means to correlation evolution. Appendix C treats the ambiguity in local density representatives. These are supporting branches of the bridge.
-
-Section 2 uses general hydrodynamics rather than Bethe Ansatz. At its end we know what equilibrium correlation to compute, how to remove its persistent part, and how to turn the remainder into a diffusion matrix. We have not yet computed the interacting model's diffusion matrix. That is the open task carried into §§3–4.
-
-### Reading strategy after our Section 2 reflection
-
-The user identified a gap in our learning method: being able to reproduce each derivation did not provide a clear overall goal. Subsequent explanations should start with the current physical question and the missing ingredient, place the subsection within the route above, and end by stating what has been obtained and what remains unknown. Technical branches should be introduced by the job they perform for the main argument. When returning from a branch, explicitly reconnect to that argument.
-
-Checkpoints should test the connection to the physical goal as well as local algebra. At major transitions, pause for a synthesis rather than automatically adding another derivation. For the present transition, our position is: the hydrodynamic-to-correlation bridge is established within the paper's stated framework; the next goal is to evaluate its inputs using quasiparticles.
-
-Our last transport checkpoint also needs an explicit correction. For a nonzero constant integrated current correlation \(K_{0j}(s)=k_j\), the answers are
-\[
-D_{0j}=k_j,\qquad \mathfrak L_{0j}=0.
-\]
-It is the residual Onsager coefficient that vanishes, not the Drude weight. The user's observation that \(q_1\) dynamics can affect the \(q_0\) profile explains why the zero diffusion row does not freeze that profile.
-
-Three matrices must stay distinct:
-
-| Symbol | Meaning | Where it enters |
-| --- | --- | --- |
-| \(D_{ij}\) | Drude matrix | Coefficient of ballistic \(t^2\) growth in Eq. (2.14) |
-| \(\mathfrak L_{ij}\) | Onsager matrix | Coefficient of subleading \(t\) growth in Eq. (2.14) |
-| \(\mathfrak D_i{}^j\) | Diffusion matrix | Coefficient of the first spatial gradient of the mean current in Eq. (2.9) |
-
-The distinction matters: \(D\) and \(\mathfrak L\) describe spreading extracted from correlations; \(\mathfrak D\) is a coefficient in a particular hydrodynamic description. Section 2.4 exposes why the latter description needs a choice of local density.
-
-## 1. What the paper is trying to add
-
-### Physics first
-
-At Euler order a quasiparticle packet travels with an effective velocity. Interactions are already present: dressing and the background state determine \(v^{\rm eff}\). The next question is whether the packet also broadens. In a normal-mode sketch,
+A conserved density \(q_i(x,t)\) and its current \(j_i(x,t)\) obey
 
 \[
-\omega_a(k)=v_a k-\frac{i}{2}\gamma_a k^2+O(k^3).
+\partial_tq_i+\partial_xj_i=0,
+\qquad Q_i=\int dx\,q_i(x,t). \tag{2.1–2.2}
 \]
 
-The real term moves the centre by \(v_at\); the imaginary \(k^2\) term produces a width of order \(\sqrt{\gamma_at}\). This dispersion is a useful interpretation, not a derivation of this paper's \(\mathfrak D\). The later quasiparticle sections will connect one particle–hole processes to Euler propagation and two particle–hole processes to the diffusive correction. At our current reading point, that connection is a preview of what the authors seek to establish.
-
-**Classification.** The new physical target is broadening in an interacting integrable fluid. Replacing a full microscopic state by slow conserved-density profiles is the standard hydrodynamic assumption. The matrix and functional notation organizes that assumption.
-
-## 2. Section 2.1: exact conservation and approximate closure
-
-The microscopic continuity equation and charge definition are exact:
+This operator equation is exact. After taking an expectation value, it becomes
 
 \[
-\partial_t q_i(x,t)+\partial_x j_i(x,t)=0,\qquad
-Q_i=\int dx\,q_i(x,t). \tag{2.1–2.2}
+\partial_t\bar q_i+\partial_x\bar j_i=0,
+\qquad \bar q_i=\langle q_i\rangle,
+\quad \bar j_i=\langle j_i\rangle.
 \]
 
-Taking expectations gives \(\partial_t\bar q_i+\partial_x\bar j_i=0\), where \(\bar q_i=\langle q_i\rangle\). It does **not** tell us the current from the density. The closure problem is to express the mean current using the slow profile \(\{\bar q_j(y,t)\}\) on one time slice.
+The equation relates changes in density to spatial variations of current. It does not tell us what current a given density profile produces. To predict the density evolution, we need that additional relation.
 
-The paper assumes local relaxation to maximum-entropy states constrained by the conserved quantities. A homogeneous stationary state is formally \(Z^{-1}\exp(-\sum_i\beta_iQ_i)\), Eq. (2.3). In an inhomogeneous situation the parameters vary slowly across space. The strong hydrodynamic postulate is Eq. (2.4): at sufficiently long scales, local averages are functionals of the conserved-density profile. This is an **assumption**, not a consequence of continuity.
+Hydrodynamics supplies it by assuming local relaxation. A fluid cell is large compared with microscopic lengths but small compared with the scale on which the profile varies. Within such a cell, the conserved densities specify an approximately stationary maximum-entropy state. The paper's postulate, Eq. (2.4), is that these slow density profiles suffice to determine local averages at the retained hydrodynamic order.
 
-Locality turns that functional into a gradient expansion. Equations (2.9)–(2.10) read
+A **closure** is precisely a rule expressing the current in terms of these density variables. If the profile varies slowly and the current depends only on nearby parts of it, the rule can be expanded in spatial derivatives:
 
 \[
-\bar j_i=F_i(\bar q)-\frac12\mathfrak D_i{}^j(\bar q)\,\partial_x\bar q_j+O(\partial_x^2),
-\]
-\[
-\partial_t\bar q_i+\partial_xF_i(\bar q)
-=\frac12\partial_x\!\left(\mathfrak D_i{}^j(\bar q)\partial_x\bar q_j\right).
+\boxed{\bar j_i
+=F_i(\bar q)-\frac12\mathfrak D_i{}^j(\bar q)\partial_x\bar q_j
++O(\partial_x^2).} \tag{2.9}
 \]
 
-Here \(F_i\) is the current measured in a **homogeneous** state; \(A_i{}^j=\partial F_i/\partial\bar q_j\) is its Jacobian, Eq. (2.20). The second term in the current is the first correction forced by inhomogeneity. The factor \(1/2\) is the paper's convention. Neither formula is an operator identity \(j_i=F_i(q)\): it is a constitutive relation for expectations.
+The term \(F_i\) is present even in a uniform state. The next term responds to a density gradient and defines the diffusion matrix. Substituting this expression into continuity gives Eq. (2.10), which we displayed at the start. The outer spatial derivative means that a first-gradient correction to the current produces a second-gradient contribution to density evolution.
 
-### Where does \(\langle j_i\rangle=F_i(\bar q)\) come from?
+These are relations between expectations. We have not asserted an operator identity such as \(j_i=F_i(q)\). Also, if \(\mathfrak D\) depends on the densities, the outer derivative acts on it as well as on \(\partial_x\bar q\). Local relaxation and the derivative expansion are assumptions of this description, not deductions from conservation alone.
 
-The authors introduce \(F_i\) as the zero-gradient term in Eq. (2.9), and explain its meaning in the paragraph immediately after Eq. (2.10): it expresses current means in terms of density means in homogeneous, stationary, maximal-entropy states. This is a definition of the equation-of-state function, supported by the assumption that the chosen conserved densities fully parametrize that family of states. Conservation alone does not establish it.
+### How the equation of state is defined
 
-To construct the function, first parametrize the homogeneous GGE by its thermodynamic sources:
+To understand \(F_i\), consider the family of homogeneous generalized Gibbs ensembles, or GGEs,
 
 \[
-\rho_{\boldsymbol\beta}=Z^{-1}e^{-\sum_k\beta_kQ_k},
+\rho_\beta=Z^{-1}e^{-\sum_k\beta_kQ_k}. \tag{2.3}
+\]
+
+The real parameters \(\beta_k\) are thermodynamic sources specifying the state. For each choice of sources, calculate the mean densities \(\bar q_k(\beta)\) and mean currents \(\bar j_i(\beta)\). If the full density vector locally identifies the state, we can use it instead of \(\beta\) as a coordinate. We then define
+
+\[
+F_i(\bar q)=\bar j_i\big(\beta(\bar q)\big).
+\]
+
+This is what the paper means by the current equation of state. One GGE supplies one density vector and one current value. A family of neighboring GGEs supplies the function and its slope:
+
+\[
+\boxed{A_i{}^j=\frac{\partial F_i}{\partial\bar q_j}.} \tag{2.20}
+\]
+
+The matrix \(A\), called the **flux Jacobian**, measures how the homogeneous current changes when we move to a nearby homogeneous state. Its derivative is a thermodynamic derivative. It is not a spatial gradient inside one uniform state, so spatial uniformity does not imply \(A=0\).
+
+The distinction between a fixed state and a varying family also matters when differentiating local expectations. At fixed \(\rho\), the derivative of \(\langle o(x)\rangle_\rho\) acts on the operator's position. In \(\langle o(x)\rangle_{\rho_x}\), the state itself varies with \(x\), so its derivative contributes too. A hydrodynamic time slice means the entire density profile at one fixed time; it does not mean a time average.
+
+We have now identified the problem that remains: thermodynamics supplies \(F\), but we still need a microscopic way to find \(\mathfrak D\). Section 2.2 introduces fluctuations because their spreading contains that information.
+
+## 3. Section 2.2 — use fluctuations to measure transport
+
+### What the density correlation records
+
+We now work in a homogeneous stationary background and study
+
+\[
+S_{ij}(x,t)=\langle q_i(x,t)q_j(0,0)\rangle^{\rm c}. \tag{2.11}
+\]
+
+The superscript means **connected**:
+\(\langle AB\rangle^{\rm c}=\langle AB\rangle-\langle A\rangle\langle B\rangle\).
+Subtracting the product of means isolates fluctuations. The correlation asks how a density fluctuation at the origin is related to a density at another position and time. In quantum mechanics, its displayed operator order is part of its definition.
+
+The total spatial weight is the susceptibility matrix,
+
+\[
+C_{ij}=\int dx\,S_{ij}(x,t). \tag{2.12}
+\]
+
+Conservation keeps this weight fixed even while the correlation moves or spreads. On a homogeneous periodic ring of length \(L\), it has the useful interpretation
+
+\[
+C_{ij}^{(L)}=\frac1L\langle Q_iQ_j\rangle^{\rm c}.
+\]
+
+Thus \(C\) measures the covariance of total-charge fluctuations per unit length. For Hermitian mutually commuting GGE charges, it is real, symmetric, and positive semidefinite. This does not require the local densities to commute at each separation. Supporting derivation A below explains the finite-volume identity and its thermodynamic limit.
+
+### Why current fluctuations determine density spreading
+
+Define the local and integrated current correlations by
+
+\[
+G_{ij}(x,t)=\langle j_i(x,t)j_j(0,0)\rangle^{\rm c},
+\qquad K_{ij}(t)=\int dx\,G_{ij}(x,t).
+\]
+
+We also define spatial moments of the density correlation:
+\(M_n(t)=\int dx\,x^nS(x,t)\). The second moment gives extra weight to correlations far from the origin, so it detects both propagation and broadening. It need not be a probability variance: a cross correlation can change sign or be complex.
+
+Continuity at both insertions, together with stationarity and translation invariance, gives
+
+\[
+\partial_t^2S_{ij}=\partial_x^2G_{ij}.
+\]
+
+Multiplying by \(x^2\) and integrating twice by parts yields
+
+\[
+\boxed{M_2''(t)=2K(t).}
+\]
+
+The boundary terms must vanish for this step. This equation gives the connection we wanted: current correlations determine how the density's second moment grows.
+
+After integrating in time, the sum rule (2.13) becomes, for \(t>0\),
+
+\[
+\frac{M_2(t)+M_2(-t)}2-M_2(0)
+=\int_{-t}^{t}du\,(t-|u|)K(u).
+\]
+
+The triangular weight counts pairs of times in the square \(0\leq s,s'\leq t\) with the same separation \(u=s-s'\). Many pairs have a small separation, while fewer have a separation close to \(\pm t\). Supporting derivation B shows the change of variables explicitly. Neither that geometry nor stationarity requires \(K(u)=K(-u)\).
+
+### Separate the persistent part from the remainder
+
+A current correlation can retain memory for arbitrarily long times. The paper measures this persistent part by the Drude matrix,
+
+\[
+D=\lim_{T\to\infty}\frac1{2T}\int_{-T}^{T}du\,K(u). \tag{2.15}
+\]
+
+A constant contribution \(D\) produces \(Dt^2\) when integrated against the triangular weight. This is the ballistic contribution to spreading. To isolate the next contribution, subtract the persistent part and integrate what remains:
+
+\[
+\mathfrak L=\lim_{T\to\infty}\int_{-T}^{T}du\,[K(u)-D]. \tag{2.16}
+\]
+
+The matrix \(\mathfrak L\) is the **Onsager matrix**. Under the paper's finite-limit assumptions, it supplies the term linear in time:
+
+\[
+\frac{M_2(t)+M_2(-t)}2-M_2(0)
+=Dt^2+\mathfrak Lt+o(t). \tag{from 2.14}
+\]
+
+The subtraction of \(M_2(0)\) is convenient and does not change the long-time coefficients. The existence of a finite Onsager limit is an additional condition; a correlation can decay too slowly for its residual time integral to converge.
+
+Keep the following distinction in mind throughout the paper:
+
+| Matrix | What it describes |
+| --- | --- |
+| \(D\), Drude | The persistent current contribution and ballistic second-moment growth. |
+| \(\mathfrak L\), Onsager | The time-integrated residual current contribution and linear second-moment growth. |
+| \(\mathfrak D\), diffusion | The density-gradient coefficient in the mean-current equation. |
+
+We have defined two coefficients from microscopic correlations, but we have not yet proved their relation to the coefficient in the hydrodynamic equation. Section 2.3 supplies that relation.
+
+## 4. Section 2.3 — identify the coefficient in the hydrodynamic equation
+
+### Turn a response of means into a correlation equation
+
+For positive time, continuity gives
+
+\[
+\partial_tS_{ij}+\partial_xJ_{ij}=0,
+\qquad J_{ij}=\langle j_i(x,t)q_j(0,0)\rangle^{\rm c}. \tag{B.1}
+\]
+
+To close this equation we need the current–density correlation \(J\). The mean-current closure does not directly give an operator relation for it. Instead, Appendix B perturbs the initial ensemble and differentiates the mean current.
+
+Let \(\eta_j(y)\) denote a positive source coupled to the initial density. We use a different symbol from the thermodynamic \(\beta\), which appears with a minus sign in the GGE exponent. The response relation used in Appendix B is
+
+\[
+\frac{\delta\langle o(x,t)\rangle}{\delta\eta_j(y)}
+=\langle o(x,t)q_j(y,0)\rangle^{\rm c}. \tag{B.3, response notation}
+\]
+
+For a commuting ensemble, this follows by differentiating
+\(\rho_\eta=Z[\eta]^{-1}\exp(\int dy\,\eta_k(y)q_k(y,0))\).
+The numerator derivative inserts \(q_j(y,0)\); the normalization derivative subtracts its mean:
+
+\[
+\frac{\delta\langle o\rangle_\eta}{\delta\eta_j(y)}
+=\langle o q_j(y,0)\rangle_\eta
+-\langle o\rangle_\eta\langle q_j(y,0)\rangle_\eta.
+\]
+
+This response changes the initial statistical ensemble. It is different from adding a force to the Hamiltonian at a later time. For general noncommuting quantum sources, differentiating an exponential produces an insertion averaged along imaginary time, called the **Kubo–Mori insertion**. It is not automatically the ordered product above. We therefore retain the paper's ordered-response step as an input at this hydrodynamic order.
+
+Now differentiate the constitutive relation around a homogeneous background:
+
+\[
+\frac{\delta\bar j_i(x,t)}{\delta\bar q_k(y,t)}
+=A_i{}^k\delta(x-y)
+-\frac12\mathfrak D_i{}^k\partial_x\delta(x-y).
+\]
+
+This functional derivative is a continuum version of a matrix derivative: \(y\) labels a component of the density profile at fixed time. The delta function says that the leading response is local. Its derivative represents the gradient term. A variation of \(\mathfrak D\) multiplies the background density gradient, which is zero; a variation of \(F\) remains and gives \(A\).
+
+The chain rule relates the response to the initial source to the response to the current density profile:
+
+\[
+\begin{aligned}
+J_{ij}(x,t)
+&=\int dy\,
+\frac{\delta\bar j_i(x,t)}{\delta\bar q_k(y,t)}
+\frac{\delta\bar q_k(y,t)}{\delta\eta_j(0)}\\
+&=A_i{}^kS_{kj}(x,t)-\frac12\mathfrak D_i{}^k\partial_xS_{kj}(x,t).
+\end{aligned}
+\]
+
+Here the source response of \(\bar q_k\) equals \(S_{kj}\). Also,
+\(\int dy\,\partial_x\delta(x-y)S_{kj}(y,t)=\partial_xS_{kj}(x,t)\).
+The delta function is integrated as a kernel; no isolated \(\delta(0)\) is involved. Substituting into continuity gives
+
+\[
+\boxed{\partial_tS=-A\partial_xS+\frac12\mathfrak D\partial_x^2S,
+\qquad t>0.} \tag{2.19, positive branch}
+\]
+
+We obtained this long-wavelength equation by differentiating a relation between means. We did not replace the microscopic current by a function of density operators.
+
+### Why negative time acts on the second index
+
+A dissipative approximation started at time zero should not be used to reconstruct an earlier state. For \(t<0\), the authors first use conservation to move the current to the insertion that can be treated as later.
+
+Besides \(J\), define
+\(H_{ij}=\langle q_i(x,t)j_j(0,0)\rangle^{\rm c}\).
+This \(H_{ij}\) is a correlation, not the Hamiltonian. Continuity at the first and second insertions gives
+
+\[
+\partial_tS_{ij}=-\partial_xJ_{ij}=-\partial_xH_{ij}.
+\]
+
+For the second equality, translate the densities to
+\(\langle q_i(0,0)q_j(-x,-t)\rangle^{\rm c}\), then differentiate the second insertion. Both its time and position coordinates have minus signs. Consequently \(J-H\) is constant in space, although it could initially depend on time. At each fixed time, spatial clustering makes each connected correlation vanish at large separation, so that spatial constant is zero:
+
+\[
+\boxed{J_{ij}=H_{ij}.} \tag{B.5}
+\]
+
+Each connected correlation subtracts its own product of means. Those products need not agree; their subtraction makes both connected functions tend to zero separately. This argument needs no exchange of operators or time-reversal symmetry. For later integrations by parts, stronger decay is needed: \(F(x)\to0\) alone does not ensure \(xF(x)\to0\) or convergence of its integral.
+
+We can now translate \(H\) without changing product order:
+
+\[
+H_{ij}(x,t)=\langle q_i(0,0)j_j(-x,-t)\rangle^{\rm c}.
+\]
+
+When \(t<0\), the time \(-t\) is positive. The later current carries index \(j\), so its constitutive response acts on the second density index. Using the corresponding ordered-response step, and \(\partial_{(-x)}=-\partial_x\), gives
+
+\[
+J_{ij}=A_j{}^kS_{ik}+\frac12\mathfrak D_j{}^k\partial_xS_{ik}.
+\]
+
+The contraction \(S_{ik}A_j{}^k\) is \((SA^{\mathsf T})_{ij}\). Therefore
+
+\[
+\boxed{\partial_tS=-(\partial_xS)A^{\mathsf T}
+-\frac12(\partial_x^2S)\mathfrak D^{\mathsf T},\qquad t<0.}
+\tag{2.19, negative branch}
+\]
+
+The transpose records which index evolves. It does not indicate an operator swap. The quantum response assumption still matters: the ordinary source identity does not, by itself, justify reversing an ordered product. If we use the positive variable \(\tau=-t\), the diffusion term for \(S(x,-\tau)\) has the usual positive sign. We are relating equilibrium correlations at opposite time separations, not running a diffusing state backward.
+
+### Why we calculate moments instead of the full profile
+
+Our target is the coefficients of \(t^2\) and \(t\) in the second moment. We therefore do not need to solve the entire spatial profile. Integrating the correlation equation against \(1\), \(x\), and \(x^2\) extracts just the information needed.
+
+The zeroth moment stays fixed:
+
+\[
+M_0=C.
+\]
+
+For positive time, the first moment obeys
+
+\[
+\int dx\,x\partial_xS=-C,
+\qquad \int dx\,x\partial_x^2S=0,
+\]
+
+so
+
+\[
+M_1(t)=ACt+E,
+\qquad E=\int dx\,xS(x,0). \tag{2.21–2.22}
+\]
+
+The matrix \(E\) describes an initial signed spatial moment. It can depend on our local definition of the density; we cannot yet set it to zero. The negative-time equation gives the same first-moment slope because the paper states
+
+\[
+\boxed{AC=CA^{\mathsf T}.} \tag{2.23}
+\]
+
+Supporting derivation C reconstructs this identity using thermodynamic source derivatives and the exact relation (B.5). It also explains the associated symmetry of the Euler modes.
+
+For the second moment, integration by parts gives
+
+\[
+\int dx\,x^2\partial_xS=-2M_1,
+\qquad \int dx\,x^2\partial_x^2S=2C.
+\]
+
+The positive-time equation consequently becomes
+
+\[
+\frac{dM_2}{dt}=2AM_1+\mathfrak DC.
+\]
+
+Substituting the first moment before integrating makes the different contributions visible:
+
+\[
+\begin{aligned}
+N(t)&:=M_2(t)-M_2(0)\\
+&=\int_0^t ds\,[2A(ACs+E)+\mathfrak DC]\\
+&=A^2Ct^2+(2AE+\mathfrak DC)t.
+\end{aligned}
+\]
+
+Propagation acts on a first moment already growing in time, producing \(t^2\). Diffusion acts on the fixed correlation weight \(C\), producing \(t\). The initial moment \(E\) also contributes linearly when transported by \(A\), which is why every linear term cannot immediately be called diffusion.
+
+For negative time,
+\(dM_2/dt=2M_1A^{\mathsf T}-C\mathfrak D^{\mathsf T}\).
+Integrating from zero to \(-\tau\), with \(\tau>0\), gives
+
+\[
+\begin{aligned}
+N(-\tau)
+&=\int_0^{-\tau}ds\,[2(ACs+E)A^{\mathsf T}-C\mathfrak D^{\mathsf T}]\\
+&=ACA^{\mathsf T}\tau^2+(C\mathfrak D^{\mathsf T}-2EA^{\mathsf T})\tau\\
+&=A^2C\tau^2+(C\mathfrak D^{\mathsf T}-2EA^{\mathsf T})\tau.
+\end{aligned}
+\]
+
+The last equality uses Eq. (2.23); it does not commute arbitrary matrices. These are the integrated forms of Eqs. (2.24)–(2.25).
+
+Averaging the positive and negative branches and comparing with the transport expansion gives
+
+\[
+\boxed{D=A^2C=ACA^{\mathsf T},}
+\]
+
+\[
+\boxed{\mathfrak L=\frac12(\mathfrak DC+C\mathfrak D^{\mathsf T})
++AE-EA^{\mathsf T}.}
+\]
+
+The second expression follows direct integration. Printed Eqs. (2.26)–(2.27) have an apparent factor discrepancy in the \(E\) terms; the review records it as an apparent issue, not an author-confirmed erratum. It will not affect the final PT-gauge result, where \(E=0\).
+
+We have now related microscopic spreading to the hydrodynamic coefficients. However, the initial moment and the local density convention still complicate the result. Section 2.4 addresses that remaining obstacle.
+
+## 5. Section 2.4 — choose the local densities consistently
+
+### The total charge does not specify its local density uniquely
+
+On a lattice, adding \(o(n+1)-o(n)\) to a density redistributes its local weight while leaving its spatial sum unchanged. In the continuum, the analogous change is a spatial derivative. Equation (2.28) permits
+
+\[
+q_i'=q_i+\partial_xo_i,
+\qquad j_i'=j_i-\partial_to_i.
+\]
+
+With vanishing spatial boundary terms, \(Q_i'=Q_i\). The two changes preserve continuity because
+
+\[
+\partial_tq_i'+\partial_xj_i'
+=\partial_tq_i+\partial_xj_i
++\partial_t\partial_xo_i-\partial_x\partial_to_i=0.
+\]
+
+The paper calls this freedom a **gauge choice**. Here it means choosing a local density for the same integrated conserved charge.
+
+Since the charge operators are unchanged, their homogeneous GGE family is unchanged. In any one of these states, homogeneity and stationarity make \(\langle o_i\rangle\) independent of position and time. Thus
+
+\[
+\langle q_i'\rangle=\langle q_i\rangle,
+\qquad \langle j_i'\rangle=\langle j_i\rangle.
+\]
+
+These equalities hold for every GGE in the family, not merely one state. They therefore preserve the whole equation of state and its derivative: \(F'=F\) and \(A'=A\). The total-charge covariance also stays fixed, so \(C'=C\), and hence the Drude matrix \(D=A^2C\) is unchanged.
+
+### Why the first moment and diffusion coefficient can change
+
+Preserving the integral of a function does not preserve its position-weighted integral. To see this explicitly, define at equal time
+
+\[
+R_{ij}=\langle o_i(x)q_j(0)\rangle^{\rm c},\quad
+U_{ij}=\langle q_i(x)o_j(0)\rangle^{\rm c},\quad
+V_{ij}=\langle o_i(x)o_j(0)\rangle^{\rm c}.
+\]
+
+A derivative at the second insertion is minus a derivative of the separation. Expanding the improved correlation without exchanging operators gives
+
+\[
+S'=S+\partial_xR-\partial_xU-\partial_x^2V.
+\]
+
+The change in \(C\) is a boundary term. The change in \(E\), however, contains
+\(\int dx\,x\partial_xR=-\int dx\,R\), assuming \(xR\) vanishes at infinity. Applying this to all terms gives
+
+\[
+C'=C,
+\qquad E'-E=-\int dx\,R+\int dx\,U.
+\]
+
+The remaining integrals need not vanish, although particular changes can make them cancel. The double derivative of \(V\) contributes zero under the required stronger decay conditions.
+
+The same density change matters at precisely the order where diffusion enters. At leading order, write \(\bar o_i=O_i(\bar q)\) and define the derivative matrix \(B_i{}^j=\partial O_i/\partial\bar q_j\). Then
+
+\[
+\bar q'=\bar q+B\partial_x\bar q+O(\partial_x^2).
+\]
+
+Using Euler evolution, \(\partial_t\bar q=-A\partial_x\bar q+O(\partial_x^2)\), in the current change yields
+
+\[
+-\partial_t\bar o=BA\partial_x\bar q+O(\partial_x^2).
+\]
+
+A time derivative has therefore generated a first-gradient correction to the current. Including the diffusive part of density evolution here would only add a second-gradient current term, beyond the coefficient being tracked. Reexpressing \(F(\bar q)\) in the changed variables also contributes at first-gradient order. These changes can alter \(\mathfrak D\) while leaving \(F\), \(A\), and the total charges fixed. We have not assumed that the different derivative matrices commute.
+
+### Why the Onsager matrix can nevertheless remain fixed
+
+The Onsager matrix measures the residual current correlation, whereas \(\mathfrak D\) is a coefficient written in selected density variables. The paper asserts that \(\mathfrak L\) is invariant under the change above, assuming hydrodynamic projection.
+
+The basic idea is that \(-\partial_to_i\), when integrated in time, produces values of \(o_i\) at the endpoints. These endpoint correlations may retain a nonzero contribution from conserved charges. To show invariance, those contributions must cancel between the two endpoints.
+
+**Hydrodynamic projection** identifies the part of an observable correlated with the conserved charges. Its remaining part is assumed to lose the relevant long-time memory. A **plateau** is the constant integrated correlation left by the conserved part after the remaining contribution relaxes. For one charge, the projected part is \(\mathcal Pa=(a,q)_0q/C\), where \((a,q)_0\) denotes their integrated equal-time covariance. The coefficient is chosen so that \(a-\mathcal Pa\) has zero charge covariance.
+
+Under suitable relaxation conditions, the mixed endpoint correlations approach the same conserved values in both time directions. Their differences then vanish, preserving \(\mathfrak L\). Total derivatives alone do not establish this conclusion. Supporting derivation D works through the projection, quantum operator order, exact endpoint formulas, and the additional assumptions needed for bounded corrections.
+
+We can now state the remaining task clearly: choose densities for which the general relation between \(\mathfrak L\) and \(\mathfrak D\) takes a simple form. The paper uses PT symmetry for this purpose.
+
+### Construct densities and currents that transform simply under PT
+
+The paper assumes a strong version of PT symmetry: an antiunitary involution \(T\) preserves the Hamiltonian, momentum, every conserved charge, and locality. An involution returns the original object when applied twice. PT reverses both position and time.
+
+For a density, define its reflected PT partner at the same displayed coordinates:
+
+\[
+\widetilde q_i(x,t)=Tq_i(-x,-t)T^{-1}.
+\]
+
+It is local and integrates to the same \(Q_i\). Equation (2.29) says that the two representatives differ by a total derivative; write that difference as \(\widetilde q_i-q_i=\partial_xb_i\). Averaging them is therefore an allowed density change:
+
+\[
+q_i^{\rm PT}=\frac12(q_i+\widetilde q_i)
+=q_i+\partial_x(b_i/2).
+\]
+
+The symmetry exchanges the two summands and leaves their average fixed. Thus
+
+\[
+Tq_i^{\rm PT}(x,t)T^{-1}=q_i^{\rm PT}(-x,-t), \tag{2.30}
+\]
+
+which is the desired simple transformation. The real coefficient \(1/2\) is unchanged by antiunitarity. This explains existence; Appendix C.2 treats the proper-gauge conditions and uniqueness, using \(o_i=-a_i/2\) in Eq. (C.6).
+
+Take the current accompanying this density change and define \(\widetilde j_i=Tj_i(-x,-t)T^{-1}\). Both derivatives in continuity change sign under the coordinate reflection, so the transformed equation has the same chosen density. Comparing the two continuity equations gives
+
+\[
+\partial_x(\widetilde j_i-j_i)=0.
+\]
+
+The average \(j_i^{\rm PT}=(j_i+\widetilde j_i)/2\) has the same divergence and obeys Eq. (2.31). Under the locality condition used in Appendix C.2, a local observable with zero spatial derivative is an identity constant. Such a current adjustment does not affect connected correlations or density evolution.
+
+### Keep the state transformation and antiunitarity explicit
+
+The correlations use the Heisenberg picture: the state \(\rho\) is fixed, while
+
+\[
+q_i(x,t)=e^{iHt/\hbar}q_i(x,0)e^{-iHt/\hbar}.
+\]
+
+Stationarity means \([\rho,H]=0\), not that every local operator is constant in time. A Schrödinger-picture calculation gives the same unequal-time correlation when it retains evolution between the insertions. Changing quantum picture and applying PT are different operations.
+
+PT acts on states as \(\rho'=T\rho T^{-1}\) and on observables as \(O'=TOT^{-1}\). The latter transformation is chosen because \(O'T|\psi\rangle=TO|\psi\rangle\): the transformed observable acts on the transformed vector as the transformed original action. For a Hermitian observable, this preserves the real measurement outcome.
+
+Our GGE is invariant because its real sources multiply PT-invariant charges:
+
+\[
+T\rho_\beta T^{-1}=\rho_\beta.
+\]
+
+Thus we have used the state transformation; it returns the same state. Antiunitarity still conjugates expectation values. To see why, write \(T=UK\), where \(U\) is unitary and \(K\) conjugates vector components in a chosen basis. Then \(TOT^{-1}=UO^*U^\dagger\), with the star denoting entrywise matrix conjugation. State invariance gives \(U^\dagger\rho U=\rho^*\), so
+
+\[
+\begin{aligned}
+\langle TOT^{-1}\rangle
+&=\operatorname{Tr}(\rho UO^*U^\dagger)\\
+&=\operatorname{Tr}(U^\dagger\rho UO^*)\\
+&=\operatorname{Tr}(\rho^*O^*)
+=\langle O\rangle^*.
+\end{aligned}
+\]
+
+More generally, \(\operatorname{Tr}(\rho'O')=[\operatorname{Tr}(\rho O)]^*\). Hermitian expectations are real, but a product of Hermitian operators need not have a real expectation. For Hermitian \(A,B\),
+
+\[
+\langle AB\rangle^{\rm c}
+=\frac12\langle\{A,B\}\rangle^{\rm c}
++\frac12\langle[A,B]\rangle.
+\]
+
+The connected anticommutator subtracts \(2\langle A\rangle\langle B\rangle\). Its contribution is real; the commutator contribution is purely imaginary. For example, \(\sigma_x\sigma_y=i\sigma_z\), so its connected expectation in a spin-up state along \(z\) is \(i\). This example illustrates the algebra, not the paper's PT density construction.
+
+It is also important that symmetry conjugation preserves product order:
+
+\[
+T(AB)T^{-1}=(TAT^{-1})(TBT^{-1}).
+\]
+
+Taking an adjoint reverses order, \((AB)^\dagger=BA\) for Hermitian factors, but applying PT does not. For the PT-adapted densities, applying the expectation identity to the ordered product therefore gives
+
+\[
+\begin{aligned}
+\langle q_i(x,t)q_j(0,0)\rangle^*
+&=\langle T[q_i(x,t)q_j(0,0)]T^{-1}\rangle\\
+&=\langle q_i(-x,-t)q_j(0,0)\rangle.
+\end{aligned}
+\]
+
+The disconnected product transforms in the same way, hence
+
+\[
+\boxed{S_{ij}(x,t)^*=S_{ij}(-x,-t).}
+\]
+
+Reflection changes the coordinates, and antiunitarity conjugates the value. Neither operation exchanges the two indices or the two insertions.
+
+### What the reflection argument establishes, and what it still needs
+
+Writing \(S=R+iI\) with real \(R,I\), the identity above makes the real part even and the imaginary part odd under simultaneous reflection. At equal time, the first moment consequently obeys
+
+\[
+E=-\int dx\,xS(-x,0)
+=-\int dx\,xS(x,0)^*=-E^*.
+\]
+
+Our earlier explanation incorrectly replaced the last expression by \(-E\) without first establishing reality. The corrected identity permits an imaginary first moment. An additional reality condition is needed to conclude \(E=0\).
+
+Likewise, with \(N(t)=M_2(t)-M_2(0)\), reflection gives \(N(t)^*=N(-t)\). The paper asserts the stronger moment statements
+
+\[
+E=0, \tag{2.33}
+\]
+\[ \frac12[N(t)+N(-t)]=N(t). \tag{2.32}
+\]
+
+The elementary reflection proof establishes these if the relevant moments are real. Reality is automatic for classical correlations; a Hermitian symmetrized quantum correlation is another real convention. However, Eq. (2.11) defines an ordered correlation, and we have not established the needed reality conditions for every such quantum moment. Locality and possible equal-time contact terms require their own analysis. We retain this qualification when using the paper's stated PT-gauge results.
+
+### The result we needed from Section 2
+
+Accepting those PT-gauge moment statements, set \(E=0\) and equate the two second-moment branches derived in §2.3. The ballistic terms already agree; equality of the linear terms gives
+
+\[
+\boxed{\mathfrak DC=C\mathfrak D^{\mathsf T}.} \tag{2.34}
+\]
+
+This identity makes the two diffusion terms in the general Onsager formula equal. It therefore reduces to
+
+\[
+\boxed{D=A^2C,\qquad\mathfrak L=\mathfrak DC.} \tag{2.35}
+\]
+
+The matrix \(\mathfrak DC\) is symmetric, but \(\mathfrak D\) need not be. For example, with \(C=\operatorname{diag}(c_1,c_2)\), its off-diagonal condition is \(\mathfrak D_1{}^2c_2=c_1\mathfrak D_2{}^1\). Unequal fluctuation weights allow unequal diffusion entries. On a positive-definite sector, the transformed matrix \(C^{-1/2}\mathfrak DC^{1/2}\) is symmetric in coordinates normalized by the fluctuations.
+
+The factor \(C\) is physically necessary. Diffusion describes the broadening rate; a correlation moment also contains the amount of fluctuation being broadened. In a scalar illustration,
+
+\[
+\partial_tS+v\partial_xS=\frac{\mathfrak D}{2}\partial_x^2S.
+\]
+
+For a centred initial packet of weight \(C\), its variance increases by \(\mathfrak Dt\), while its unnormalized second-moment change is \(Cv^2t^2+C\mathfrak Dt\). Thus \(D=v^2C\) and \(\mathfrak L=C\mathfrak D\). The familiar coefficient \(\nu\) multiplying \(\partial_x^2S\) is \(\nu=\mathfrak D/2\) in the paper's convention.
+
+On the space of independent charge combinations with nonzero susceptibility, we may invert \(C\) and write
+
+\[
+\boxed{\mathfrak D=\mathfrak L C^{-1}.}
+\]
+
+The inverse belongs on the right. Redundant charges or charge combinations with zero fluctuation make \(C\) singular, so they must be removed or treated separately. Infinitely many charges additionally require care with the inverse as an operator.
+
+We have completed the general part of the calculation: static fluctuations give \(C\), residual current correlations give \(\mathfrak L\), and their combination determines diffusion in the chosen PT framework. Before introducing quasiparticles, §2.5 checks a special consequence of this relation.
+
+## 6. Section 2.5 — when the current is itself a conserved density
+
+Suppose a model has the exact local identity
+
+\[
+j_0(x,t)=q_1(x,t). \tag{2.36}
+\]
+
+The current of charge zero is the density of another conserved charge. Its spatial integral is therefore conserved:
+
+\[
+J_0(t)=\int dx\,j_0(x,t)=Q_1.
+\]
+
+This is more information than conservation of \(Q_0\) alone. It occurs, for example, when mass current equals momentum density in a Galilean system or energy current equals momentum density in a relativistic system. Particle-number current needs the appropriate mass factor. The paper also gives the XXZ energy current as an example from an integrable conserved-charge tower.
+
+Keeping the order of the insertions, we find
+
+\[
+K_{0j}(s)=\int dx\,\langle q_1(x,s)j_j(0,0)\rangle^{\rm c}
+=\langle Q_1j_j(0,0)\rangle^{\rm c}=:k_j.
+\]
+
+Since \(Q_1\) is conserved, this expression has no time dependence. The definitions of the transport coefficients then immediately give
+
+\[
+D_{0j}=\lim_{T\to\infty}\frac{2Tk_j}{2T}=k_j,
 \qquad
-\bar q_k(\boldsymbol\beta)=\operatorname{Tr}(\rho_{\boldsymbol\beta}q_k),
-\qquad
-\bar j_i(\boldsymbol\beta)=\operatorname{Tr}(\rho_{\boldsymbol\beta}j_i).
+\mathfrak L_{0j}=\lim_{T\to\infty}\int_{-T}^{T}ds\,[k_j-k_j]=0.
 \]
 
-Whenever the full density vector \(\bar q\) is a valid local coordinate for these states, eliminate \(\boldsymbol\beta\) and define
+The whole integrated correlation belongs to persistent transport. After subtracting the Drude contribution, nothing remains for the Onsager coefficient. This corrects the possible confusion that both coefficients should vanish: \(D_{0j}\) can be nonzero.
+
+Equation (2.35) now gives \(0=\mathfrak D_0{}^kC_{kj}\). On an invertible susceptibility sector,
 
 \[
-F_i(\bar q):=\bar j_i\big(\boldsymbol\beta(\bar q)\big).
+\boxed{\mathfrak D_0{}^i=0\quad\text{for every }i.} \tag{2.37}
 \]
 
-One chosen GGE gives one point on this function: its density vector and its current value. Varying the GGE parameters constructs the local equation-of-state function; varying neighboring states determines its Jacobian \(A_i{}^j\). This also explains the gauge-invariance argument in §2.4: Eq. (2.28) preserves both means for every homogeneous GGE, so it preserves every point of the relation and therefore its derivative.
+This zero row removes all first-gradient terms in that current. It does not freeze the density profile, because its continuity equation is still \(\partial_t\bar q_0+\partial_x\bar q_1=0\). The dynamics of \(q_1\) can involve other fields and dissipative terms, so coupled modes can still damp. Also, symmetry of \(\mathfrak L\) makes its row and column zero, but multiplying by \(C^{-1}\) can mix columns; a zero row of \(\mathfrak D\) need not be a zero column.
 
-The equality \(\langle j_i\rangle=F_i(\bar q)\) then says that we evaluate the same state using density coordinates instead of source coordinates. \(F_i\) depends on the full set of densities, not only \(\bar q_i\). Its actual values are model-dependent and must be computed; writing \(F_i\) does not calculate them. Equivalently, all gradient terms in Eq. (2.9) vanish on a uniform density profile, leaving its homogeneous current \(F_i(\bar q)\). Homogeneity by itself does not guarantee this closure for an arbitrary microscopic state: the restricted maximal-entropy state family and completeness of its thermodynamic variables matter.
+The printed Eq. (2.38) uses \(q_0\) in the substitution where Eq. (2.36) requires \(q_1\). We treat this as an apparent index typo, not an author-confirmed erratum.
 
-**Fixed state versus family of states.** For one fixed inhomogeneous state \(\rho\), differentiating \(\langle o(x)\rangle_\rho\) with respect to \(x\) acts on the operator's position. For a family \(\rho_x\) of locally homogeneous states, differentiating \(\langle o(x)\rangle_{\rho_x}\) also changes the state. These are different derivatives. Likewise, a hydrodynamic “time slice” is a profile at fixed \(t\), not an average over time.
+At the end of §2, our remaining task is concrete: calculate the equilibrium current correlations and susceptibilities of an interacting integrable model. Section 3 changes to variables suited to that calculation.
 
-**Reproduce:** substitute the current expansion into continuity and keep track of the outer \(\partial_x\). If \(\mathfrak D\) depends on \(\bar q\), that outer derivative generates products of gradients; one must not silently treat it as constant.
+## 7. Section 3.1 — describe the stationary background with quasiparticles
 
-## 3. Section 2.2: how correlations measure transport
+### Why the state comes before the correlation calculation
 
-Work in one homogeneous stationary background. Define the ordered connected density correlator and susceptibility,
+Section 3 introduces the microscopic current correlation
 
 \[
-S_{ij}(x,t)=\langle q_i(x,t)q_j(0,0)\rangle^{\rm c},\qquad
-C_{ij}=\int dx\,S_{ij}(x,t). \tag{2.11–2.12}
+\Gamma_{ij}(x,t)=\langle j_i(x,t)j_j(0,0)\rangle^{\rm c}. \tag{3.1}
 \]
 
-Conservation makes \(C\) time independent; it does not freeze the shape of \(S(x,t)\).
+Its spatial integral is our \(K_{ij}(t)\), which enters the Drude and Onsager formulas. To calculate it, we must specify the stationary state in which the expectation is taken. The Bethe Ansatz provides a useful description in terms of quasiparticles.
 
-### Why the integrated susceptibility is symmetric
+The sequence within §3 is purposeful. Section 3.1 describes a uniform state, §3.2 allows that state to vary slowly and gives Euler GHD, §3.3 supplies excitations and form factors for correlations, and §3.4 checks the method against known Euler transport. We have begun only the first of these steps.
 
-The paper states symmetry after Eq. (2.12). For ordered quantum correlations, translation invariance alone should not be mistaken for permission to exchange two local operators. A useful derivation for the homogeneous commuting-charge GGE starts on a periodic ring of finite length \(L\). At equal time, let
+### Replace individual roots with a smooth density
+
+For its initial presentation, the paper takes a ring of length \(L\), one quasiparticle type with real rapidities, and a bare momentum satisfying \(p'(\theta)>0\). An eigenstate is specified by Bethe roots \(\{\theta_a\}\). In the thermodynamic limit, the useful information is their distribution rather than the position of each individual root.
+
+Define the occupied density by counting roots in a small rapidity bin:
+
+\[
+\#\{\theta_a\in[\theta,\theta+d\theta]\}
+\simeq L\rho_{\rm p}(\theta)d\theta.
+\]
+
+The bin is small compared with the scale on which the smooth distribution varies but contains many roots as \(L\) grows. Thus \(\rho_{\rm p}\) counts quasiparticles per physical length and per rapidity, and \(\int d\theta\,\rho_{\rm p}=N/L\). It is not a probability density normalized to one.
+
+Many eigenstates have the same smooth distribution. Their shared thermodynamic description is called a **macrostate**. Within the equivalence of ensembles for local observables, this distribution can represent the local properties of a homogeneous GGE. This equivalence concerns thermodynamic expectations, not equality between an arbitrary pure-state density matrix and a mixed ensemble.
+
+Quasiparticle variables help because one distribution organizes the populations carrying the different conserved charges. We will later use their one-particle charge values \(h_i(\theta)\) to obtain explicit charge and current formulas.
+
+### Distinguish occupied modes from available modes
+
+The Bethe counting description uses three densities: \(\rho_{\rm p}\) counts occupied modes, \(\rho_{\rm s}\) counts available modes, and \(\rho_{\rm h}=\rho_{\rm s}-\rho_{\rm p}\) counts holes. Their ratio is the filling function,
+
+\[
+\boxed{n(\theta)=\frac{\rho_{\rm p}(\theta)}{\rho_{\rm s}(\theta)}.} \tag{3.6}
+\]
+
+For fermionic Bethe occupation, \(0\leq n\leq1\). Here “fermionic” describes occupation of the Bethe modes; it does not require the original physical particles to be fermions. More general statistics enter later, so this literal hole-counting interpretation should not be imposed unchanged on every model.
+
+For example, a bin with 100 available modes and 30 occupied modes has filling \(0.3\) and 70 holes. The interacting feature is that the number of available modes in a bin itself depends on the occupied background. We must determine that number along with the occupation.
+
+### Scattering changes the counting of available modes
+
+The model supplies a bare momentum \(p(\theta)\) and a two-body scattering amplitude \(S(\theta,\alpha)\). The derivative of its phase is the kernel
+
+\[
+T(\theta,\alpha)=\frac1{2\pi i}\partial_\theta\log S(\theta,\alpha). \tag{3.3}
+\]
+
+This \(S\) is a scattering amplitude, not the density correlation \(S_{ij}\). This \(T\) is an integral kernel, not the antiunitary PT operator. The paper initially assumes its symmetry, \(T(\theta,\alpha)=T(\alpha,\theta)\), Eq. (3.5).
+
+Without scattering, quantization would read \(Lp(\theta)=2\pi I\). Differentiating the counting label \(I\) gives the available-mode density \(p'(\theta)/(2\pi)\). In the interacting Bethe equations, scattering with the occupied roots changes this counting relation. Its derivative gives
+
+\[
+\boxed{\rho_{\rm s}(\theta)=\frac{p'(\theta)}{2\pi}
++\int d\alpha\,T(\theta,\alpha)\rho_{\rm p}(\alpha).} \tag{3.4}
+\]
+
+The first term is the bare density of modes. The second term accounts for their changed quantization in the populated background. Its sign depends on the model, so scattering does not necessarily increase the mode density.
+
+### Dressing solves the background dependence
+
+Substitute \(\rho_{\rm p}=n\rho_{\rm s}\) into the counting equation:
+
+\[
+\rho_{\rm s}(\theta)=\frac{p'(\theta)}{2\pi}
++\int d\alpha\,T(\theta,\alpha)n(\alpha)\rho_{\rm s}(\alpha). \tag{3.7}
+\]
+
+Given a filling, we can solve this integral equation for \(\rho_{\rm s}\), then recover \(\rho_{\rm p}\). Under the appropriate solvability conditions, either \(n\) or \(\rho_{\rm p}\) describes the state.
+
+The paper uses this same equation structure to define the **dressing** of a function \(h\):
+
+\[
+\boxed{h^{\rm dr}(\theta)=h(\theta)
++\int d\alpha\,T(\theta,\alpha)n(\alpha)h^{\rm dr}(\alpha).}
+\]
+
+Dressing modifies a bare quantity through its dependence on the occupied background. In operator notation,
+
+\[
+h^{\rm dr}=(1-Tn)^{-1}h, \tag{3.9}
+\]
+\[ 2\pi\rho_{\rm s}=(p')^{\rm dr}. \tag{from 3.8}
+\]
+
+The order in \(Tn\) matters: \(n\) multiplies the integrated variable before the kernel acts,
+
+\[
+(Tnh)(\theta)=\int d\alpha\,T(\theta,\alpha)n(\alpha)h(\alpha).
+\]
+
+By contrast, \((nTh)(\theta)=n(\theta)\int d\alpha\,T(\theta,\alpha)h(\alpha)\). These operations generally differ. The inverse notation means solving the integral equation; a formal series \(h+Tnh+(Tn)^2h+\cdots\) illustrates repeated feedback but is not a convergence claim for every state.
+
+When \(T=0\), dressing disappears: \(h^{\rm dr}=h\), and \(\rho_{\rm s}=p'/(2\pi)\) no longer depends on the filling. In an interacting model, changing \(n\) changes the background entering the integral equation and can change the available-mode density.
+
+This completes the first part of our microscopic description. We can specify a stationary background by a rapidity distribution or filling and calculate its dressed quantities. Dressing already affects Euler propagation; it does not, by itself, provide the diffusion term. The next part of §3.1 will connect these state variables to thermodynamic sources, statistics, and charge/current data. Later, particle–hole correlations will supply the remaining information for \(\mathfrak L\).
+
+## Supporting derivations
+
+The main argument above is complete for the material covered so far. The following calculations explain four steps that deserved closer attention in our discussions. Each begins with its own question, so that you can revisit one proof without having to reconstruct the entire chapter.
+
+## A. Why is the susceptibility symmetric?
+
+We want to justify the symmetry of the susceptibility stated after Eq. (2.12). For ordered quantum correlations, translation invariance alone should not be mistaken for permission to exchange two local operators. To make the total-charge interpretation precise, we consider a homogeneous GGE built from mutually commuting charges on a periodic ring of finite length \(L\). At equal time, let
 \[
 Q_i=\int_0^L dx\,q_i(x),\qquad
 C^{(L)}_{ij}=\int_0^L dr\,\langle q_i(r)q_j(0)\rangle^{\rm c}.
@@ -211,7 +811,7 @@ Thus the susceptibility is the **connected covariance of total charges per unit 
 \[
 \boxed{C=C^{\mathsf T}.}
 \]
-Clustering alone need not ensure integrability; the limit and finiteness of the spatial integral are part of this conclusion's regularity assumptions. This argument does **not** require local densities to commute, nor does it assert \(S_{ij}(x,0)=S_{ji}(x,0)\) at each separation.
+We assume that the thermodynamic limit exists and the spatial correlation integral is finite. A correlation tending to zero at large separation does not, by itself, guarantee a finite integral. This argument does **not** require local densities to commute, nor does it assert \(S_{ij}(x,0)=S_{ji}(x,0)\) at each separation.
 
 For the same finite-volume GGE, \(\rho_\beta=Z^{-1}e^{-\beta_kQ_k}\), the negative source convention gives an equivalent thermodynamic check:
 \[
@@ -219,243 +819,68 @@ For the same finite-volume GGE, \(\rho_\beta=Z^{-1}e^{-\beta_kQ_k}\), the negati
 C^{(L)}_{ij}=-\partial_{\beta_j}\bar q_i
 =\frac1L\partial_{\beta_i}\partial_{\beta_j}\log Z.
 \]
-The Hessian is symmetric where these derivatives exist. For Hermitian commuting charges its covariance is real and positive semidefinite; inverse metrics below are restricted to an independent positive-definite sector.
+The matrix of second derivatives, called the Hessian, is symmetric when these derivatives exist and commute. For Hermitian mutually commuting charges, the covariance is also real and positive semidefinite: every real combination of charges has nonnegative variance. To invert this covariance, we restrict to independent combinations with strictly positive variance.
 
-### Current correlations and density moments
+## B. Why does the sum rule have a triangular time weight?
 
-Define the spatially integrated current correlator
-
+We can derive the triangular weight by keeping track of the allowed time pairs. This change of variables is exact, so it does not introduce a hydrodynamic approximation. For \(t>0\), the paper writes the right-hand side of Eq. (2.13) as
 \[
-K_{ij}(t)=\int dx\,\langle j_i(x,t)j_j(0,0)\rangle^{\rm c}
+I_{ij}(t)=\int_0^t ds\int_0^t ds'\int dx\,
+\langle j_i(x,s)j_j(0,s')\rangle^{\rm c}.
 \]
-
-and the density-correlation moments \(M_n(t)=\int dx\,x^nS(x,t)\). Their second moment records both transport of the centre and spreading.
-
-### Derivation backbone of the sum rule
-
-Use continuity on each density insertion. Stationarity and translation invariance convert the derivatives at the second insertion into derivatives of the coordinate difference. With \(G_{ij}(x,t)=\langle j_i(x,t)j_j(0,0)\rangle^{\rm c}\),
-
+Stationarity translates both time arguments by \(-s'\), keeping the product order fixed:
 \[
-\partial_t^2 S_{ij}(x,t)=\partial_x^2G_{ij}(x,t).
+\langle j_i(x,s)j_j(0,s')\rangle^{\rm c}
+=\langle j_i(x,s-s')j_j(0,0)\rangle^{\rm c}.
 \]
+The spatial integral is therefore \(K_{ij}(s-s')\). Our convention is the time of the first insertion minus that of the second. The paper states this dependence immediately after Eq. (2.13); \(K\) is our abbreviation for its spatial integral.
 
-Multiplying by \(x^2\) and integrating by parts twice gives \(M_2''(t)=2K(t)\), assuming the boundary terms vanish. Applying this relation to \(t\) and \(-t\) produces the symmetrized sum rule (2.13):
-
+To carry out the change of variables, set \(u=s-s'\), \(v=s'\). Then \(s=u+v\), \(s'=v\). The Jacobian is
 \[
-\frac{M_2(t)+M_2(-t)}2-M_2(0)
-=\int_{-t}^{t}du\, (t-|u|)K(u).
+\left|\det\frac{\partial(s,s')}{\partial(u,v)}\right|
+=\left|\det\begin{pmatrix}1&1\\0&1\end{pmatrix}\right|=1.
 \]
-
-The triangular weight is the time-integrated effect of the current correlation. This is the short derivation to remember; the exact integration-by-parts proof in Appendix A is machinery.
-
-The paper defines, componentwise,
-
+The original square \(0\leq s,s'\leq t\) becomes
 \[
-D=\lim_{T\to\infty}\frac{1}{2T}\int_{-T}^{T}du\,K(u), \tag{2.15}
-\]
-\[
-\mathfrak L=\lim_{T\to\infty}\int_{-T}^{T}du\,[K(u)-D]. \tag{2.16}
-\]
-
-If \(K(t)\) has a persistent component \(D\), the triangular integral grows as \(Dt^2\): ballistic transport. If the remainder has a finite integrated area, it contributes \(\mathfrak L t\): the diffusive-scale correction in Eq. (2.14). A decaying remainder need not have a finite area, so ordinary finite diffusion is an additional long-time condition. \(M_2\) is an *uncentered correlation moment*, not automatically a probability variance or merely a packet width.
-
-**Memorize the meaning, derive the relation:** persistent current correlation \(\leftrightarrow D\); integrated remainder \(\leftrightarrow\mathfrak L\); continuity links these to the \(t^2\) and \(t\) terms of density spreading.
-
-## 4. Section 2.3 and Appendix B: turn closure into a correlation equation
-
-This is a bridge, not a new quasiparticle calculation. The paper wants to relate the measured \(D,\mathfrak L\) to the hydrodynamic \(A,\mathfrak D\). For positive time, exact continuity gives
-
-\[
-\partial_t S_{ij}(x,t)
-+\partial_x\langle j_i(x,t)q_j(0,0)\rangle^{\rm c}=0. \tag{B.1}
-\]
-
-To evaluate the current–density correlator, perturb the *initial ensemble* by a source that inserts \(q_j(0,0)\). Appendix B's response assumption is Eq. (B.3),
-
-\[
-\frac{\delta\langle o(x,t)\rangle}{\delta\eta_j(y)}
-=\langle o(x,t)q_j(y,0)\rangle^{\rm c}.
-\]
-
-We use \(\eta\) to distinguish this positive response coordinate from the negative-sign thermodynamic \(\beta\) in Eq. (2.3). In a commuting ensemble, differentiating the normalized exponential shows the connected subtraction directly: the derivative of \(Z^{-1}\) subtracts \(\langle o\rangle\langle q_j\rangle\). For generic noncommuting quantum sources, an exponential derivative gives a Kubo–Mori insertion; the ordinary ordered insertion here requires the paper's additional response assumption at diffusive order.
-
-Here is the normalization step rather than a slogan. For a commuting initial ensemble, write
-
-\[
-\rho_\eta=\frac{\exp(\int dy\,\eta_k(y)q_k(y,0))}{Z[\eta]}.
-\]
-
-Differentiating the numerator inserts \(q_j(y,0)\); differentiating \(Z[\eta]^{-1}\) contributes minus \(\langle q_j(y,0)\rangle\). Thus
-
-\[
-\frac{\delta\langle o(x,t)\rangle_\eta}{\delta\eta_j(y)}
-=\langle o(x,t)q_j(y,0)\rangle_\eta
--\langle o(x,t)\rangle_\eta\langle q_j(y,0)\rangle_\eta.
-\]
-
-This is an *initial-ensemble* derivative, not the Hamiltonian Kubo response to a force applied at a later time. It creates the fluctuation of \(q_j\) at time \(0\) and observes what that fluctuation correlates with at time \(t\).
-
-### The functional chain rule, explicitly
-
-Linearize the constitutive relation around a *homogeneous* background:
-
-\[
-\frac{\delta\bar j_i(x,t)}{\delta\bar q_k(y,t)}
-=A_i{}^k\delta(x-y)
--\frac12\mathfrak D_i{}^k\,\partial_x\delta(x-y).
-\]
-
-This is a continuum matrix kernel. Its \(\delta(x-y)\) says that the Euler response is local; the derivative of the delta function carries the gradient correction. A variation of \(\mathfrak D(\bar q)\) multiplies the background gradient and therefore vanishes in this homogeneous linearization. The variation of \(F\) does **not** vanish: it gives \(A\).
-
-The functional derivative is with respect to the *entire profile at fixed \(t\)*. In a discrete analogy, \(y\) is a continuous component label. In particular, \(\delta\bar q_i(x,t)/\delta\bar q_k(y,t)=\delta_i{}^k\delta(x-y)\); it is not an isolated \(\delta(0)\). The derivative-of-delta term is also concrete:
-
-\[
-\int dy\,\partial_x\delta(x-y)\,S_{kj}(y,t)
-=\partial_x S_{kj}(x,t).
-\]
-
-Equation (B.4) applies the chain rule:
-
-\[
-\begin{aligned}
-\langle j_i(x,t)q_j(0,0)\rangle^{\rm c}
-&=\int dy\,
-\frac{\delta\bar j_i(x,t)}{\delta\bar q_k(y,t)}
-\frac{\delta\bar q_k(y,t)}{\delta\eta_j(0)}\\
-&=A_i{}^kS_{kj}(x,t)
--\frac12\mathfrak D_i{}^k\,\partial_xS_{kj}(x,t).
-\end{aligned}
-\]
-
-The second factor in the first line equals \(S_{kj}(y,t)\) by the assumed source response. The repeated \(k\) is summed. Substitute the resulting current–density correlator into (B.1):
-
-\[
-\boxed{\partial_tS=-A\,\partial_xS
-+\frac12\mathfrak D\,\partial_x^2S,\qquad t>0.} \tag{2.19, positive branch}
-\]
-
-The essential lesson is that we differentiated a closure for *mean currents* to obtain a long-wavelength correlator equation. We did not replace the microscopic current operator by \(F(q)-\mathfrak D\partial_xq/2\).
-
-### Why negative time requires a different argument
-
-For \(t<0\), a state at time \(0\) cannot be used as initial data for a dissipative approximation at the earlier time \(t\). The authors first prove an exact correlator identity. Write
-
-\[
-J_{ij}=\langle j_i(x,t)q_j(0,0)\rangle^{\rm c},\qquad
-H_{ij}=\langle q_i(x,t)j_j(0,0)\rangle^{\rm c}.
-\]
-
-Here \(J_{ij}\) is the current–density connected correlator and \(H_{ij}\) is the density–current connected correlator; **\(H_{ij}\) is not the Hamiltonian**. Both depend on \((x,t)\). Continuity at the first insertion gives \(\partial_tS_{ij}=-\partial_xJ_{ij}\). To track the second insertion explicitly, homogeneity and stationarity give
-\[
-S_{ij}(x,t)=\langle q_i(0,0)q_j(-x,-t)\rangle^{\rm c}.
-\]
-Differentiating in \(t\), then using continuity on \(q_j\) at \((z,s)=(-x,-t)\), gives
-\[
-\partial_t S_{ij}
-=-\langle q_i(0,0)\partial_s q_j(z,s)\rangle^{\rm c}
-=\langle q_i(0,0)\partial_z j_j(z,s)\rangle^{\rm c}
-=-\partial_x H_{ij}(x,t).
-\]
-Consequently \(\partial_x(J_{ij}-H_{ij})=0\): their difference is an integration constant in space, \(f_{ij}(t)\), not necessarily a constant in time.
-
-At **fixed \(t\)**, spatial clustering says that the *unconnected* products factorize:
-\[
-\langle j_i(x,t)q_j(0,0)\rangle
-\longrightarrow\langle j_i\rangle\langle q_j\rangle,\qquad
-\langle q_i(x,t)j_j(0,0)\rangle
-\longrightarrow\langle q_i\rangle\langle j_j\rangle
-\quad (|x|\to\infty).
-\]
-These two factorized products need not equal each other. Each **connected** correlator subtracts its own product, however, so \(J_{ij}\to0\) and \(H_{ij}\to0\). Evaluating their spatially constant difference at infinity gives \(f_{ij}(t)=0\), hence
-
-\[
-\boxed{J_{ij}(x,t)=H_{ij}(x,t).} \tag{B.5}
-\]
-
-This proof uses continuity, homogeneity, stationarity, and clustering, not an operator swap or a time-reversal assumption. Mere vanishing of the connected correlators at infinity is enough to remove this constant; no spatial integration is needed. By contrast, an \(x\)-weighted integration by parts contains \([xF(x)]_{-\infty}^{+\infty}\): it requires \(xF(x)\to0\) as well as convergence of the relevant integrals (for example, integrability of \(F\) in \(\int x\partial_xF=-\int F\)). Clustering \(F\to0\) alone supplies neither condition; higher moments require their corresponding stronger boundary and moment assumptions.
-
-Now translate *both* insertions:
-
-\[
-H_{ij}(x,t)=
-\langle q_i(0,0)j_j(-x,-t)\rangle^{\rm c}.
-\]
-
-No operators have been exchanged. Because \(t<0\), the current \(j_j\) now appears at the later time \(-t>0\). Apply the corresponding right-insertion response to its constitutive relation. Its spatial coordinate is \(z=-x\), so \(\partial_z=-\partial_x\); this flips the sign of the gradient term:
-
-\[
-J_{ij}=A_j{}^kS_{ik}
-+\frac12\mathfrak D_j{}^k\partial_xS_{ik}.
-\]
-
-The \(j\) index sits on \(A_j{}^k\) and \(\mathfrak D_j{}^k\), while the sum runs over the *second* density index \(k\) of \(S_{ik}\). Hence \(S_{ik}A_j{}^k=(SA^{\mathsf T})_{ij}\), not \((AS)_{ij}\). Inserting this \(J\) into continuity gives
-
-\[
-\boxed{\partial_tS=-(\partial_xS)A^{\mathsf T}
--\frac12(\partial_x^2S)\mathfrak D^{\mathsf T},\qquad t<0.}
-\tag{2.19, negative branch}
-\]
-
-The minus sign on diffusion is a sign in the negative-time equation. If one uses \(\tau=-t>0\), the diffusion term in the equation for \(S(x,-\tau)\) has positive sign. It is not a claim of physical antidiffusion.
-
-**Operator-order limit of the argument.** Eq. (B.5) relates two different current–density correlators by conservation and clustering. Translating \(H\) preserves its order, with \(q_i\) left of \(j_j\). In a generic quantum ensemble the usual left-source response in (B.3) does not by itself generate that right-ordered correlator. The paper uses a symmetric response step; treat its ordered-response validity as an input, rather than silently commuting the operators.
-
-### Why moments are enough for the transport question
-
-Equation (2.19) governs the whole long-wavelength shape of \(S_{ij}(x,t)\), but the transport coefficients in Eq. (2.14) are defined by one spatial integral weighted by \(x^2\). We can therefore integrate the differential equation against \(1\), \(x\), and \(x^2\) instead of solving its full spatial profile. This is the shortest route from the hydrodynamic coefficients \(A,\mathfrak D\) to the spreading coefficients \(D,\mathfrak L\).
-
-Define a matrix for each moment,
-
-\[
-M_n(t)_{ij}:=\int dx\,x^n S_{ij}(x,t).
-\]
-
-These are *correlation* moments. They can be complex or sign-changing before an appropriate symmetrization, so “centre” and “width” below are physical analogies rather than a claim that \(S\) is always a probability distribution. Every integration by parts in this subsection assumes sufficiently rapid spatial decay.
-
-#### Zeroth moment: conserved correlation weight
-
-Integrate either branch of Eq. (2.19) over \(x\). Every spatial derivative becomes a boundary term, hence
-
-\[
-\frac{dM_0}{dt}=0,\qquad M_0(t)=C. \tag{2.12}
-\]
-
-The static susceptibility \(C\) supplies the weight that the hydrodynamic motion transports. A sharp packet and a broad packet can have the same \(C\).
-
-#### First moment: propagation
-
-For \(t>0\), multiply Eq. (2.19) by \(x\) and integrate. The two required integrals are
-
-\[
-\int dx\,x\,\partial_xS=-\int dx\,S=-C,
+0\leq v\leq t,\qquad 0\leq v+u\leq t,
 \qquad
-\int dx\,x\,\partial_x^2S=0.
+\max(0,-u)\leq v\leq\min(t,t-u).
 \]
-
-The second equality shows explicitly why the diffusive term does not directly shift the first moment. Consequently
-
+The interval is nonempty only for \(-t\leq u\leq t\). Its length, the measure of time pairs with fixed separation \(u\), is
 \[
-\frac{dM_1}{dt}=AC,\qquad
-\boxed{M_1(t)=AC\,t+E},\qquad
-E_{ij}:=M_1(0)_{ij}=\int dx\,xS_{ij}(x,0). \tag{2.21–2.22}
+w_t(u)=
+\begin{cases}
+t+u,&-t\leq u\leq0,\\
+t-u,&0\leq u\leq t,\\
+0,&|u|>t.
+\end{cases}
 \]
-
-\(E\) is an *initial* displacement of the chosen density-correlation representative. Nothing in §2.3 lets us set it to zero.
-
-For \(t<0\), the matrices in Eq. (2.19) act on the right. The same integration gives \(dM_1/dt=CA^{\mathsf T}\). The paper states the identity
-
+Consequently, integrating over \(v\) gives
 \[
-\boxed{AC=CA^{\mathsf T}.} \tag{2.23}
+\boxed{I_{ij}(t)
+=\int_{-t}^{t}du\int_{\max(0,-u)}^{\min(t,t-u)}dv\,K_{ij}(u)
+=\int_{-t}^{t}du\,(t-|u|)K_{ij}(u),\qquad t>0.}
 \]
+Geometrically, lines \(s-s'=u\) run parallel to the diagonal of the time square. At \(u=0\), the allowed \(v\)-interval has length \(t\); toward either corner it shrinks linearly, reaching zero at \(u=\pm t\). This is an interval length in \(v\), not the Euclidean diagonal length: the unit Jacobian already accounts for the area measure. The triangular kernel therefore counts how much of the square carries each time difference.
 
-This ensures the positive- and negative-time calculations describe the same slope \(M_1'(t)\). Here is a microscopic/thermodynamic derivation for the homogeneous commuting-charge GGE, using the exact identity (B.5), rather than inferring symmetry by commuting local operators.
+Neither stationarity nor this geometry assumes \(K_{ij}(u)=K_{ij}(-u)\), interchanges \(i,j\), or swaps the current operators. Without an independent evenness assumption, the equivalent positive-time expression is
+\[
+I_{ij}(t)=\int_0^t du\,(t-u)\big[K_{ij}(u)+K_{ij}(-u)\big],
+\]
+not automatically \(2\int_0^t du\,(t-u)K_{ij}(u)\). The same domain conversion is used below in the Appendix C.1 discussion; the endpoint-cancellation argument is a separate step.
 
-**Uniform source response and the chain rule.** Recall that \(A_i{}^k=\partial F_i/\partial\bar q_k\) is the flux Jacobian, while \(C_{kj}\) is the density susceptibility. Introduce a separate **current–density susceptibility**
+## C. Why does the flux Jacobian obey \(AC=CA^{\mathsf T}\)?
+
+We can derive Eq. (2.23) for the homogeneous commuting-charge GGE, using the exact identity (B.5), rather than inferring symmetry by commuting local operators.
+
+### Differentiate the homogeneous current with respect to the sources
+
+Recall that \(A_i{}^k=\partial F_i/\partial\bar q_k\) is the flux Jacobian, while \(C_{kj}\) is the density susceptibility. Introduce a separate **current–density susceptibility**
 \[
 \mathcal B_{ij}:=\int dx\,\langle j_i(x,0)q_j(0,0)\rangle^{\rm c}
 =\langle j_i(0,0)Q_j\rangle^{\rm c}.
 \]
-The second equality uses translation invariance, with no operator exchange. Here \(\mathcal B\) is not the normalized matrix \(B=C^{-1/2}AC^{1/2}\) used below (nor the improvement Jacobian denoted \(B_i{}^j\) later in §2.4). Integrated expressions are understood through finite-volume charge insertions and a homogeneous thermodynamic limit with finite mixed susceptibility.
+The second equality uses translation invariance, with no operator exchange. The symbol \(\mathcal B\) is an explanatory name for this mixed response. We define its total-charge insertion at finite volume, then take a homogeneous thermodynamic limit in which the mixed susceptibility remains finite.
 
 In \(\rho_\beta=Z^{-1}e^{-\beta_kQ_k}\), mutual commutativity of the total charges implies
 \[
@@ -480,7 +905,9 @@ Since \(\bar j_i=F_i(\bar q)\) throughout the homogeneous GGE family, the ordina
 \]
 This is a derivative relation among **means in nearby states**, not the microscopic operator identity \(j_i=A_i{}^kq_k\).
 
-**Why the mixed susceptibility is symmetric.** Integrating (B.5) at equal time, then retaining the order of the total-charge insertion, gives
+### Establish the symmetry of that response
+
+Integrating (B.5) at equal time, then retaining the order of the total-charge insertion, gives
 \[
 \begin{aligned}
 \mathcal B_{ij}
@@ -498,7 +925,7 @@ Only the step with the **total charge** uses equilibrium trace cyclicity. In a f
 =\operatorname{Tr}(j_j Q_i\rho_\beta)
 =\operatorname{Tr}(\rho_\beta j_jQ_i).
 \]
-The connected subtraction is unchanged. No assumption \([Q_i,j_j]=0\), local operator swap, or time-reversal symmetry was needed. The equality of the two spatial integrals comes from (B.5) in the clustering thermodynamic state; finite-volume traces regulate the total-charge insertions before that limit.
+The connected subtraction is unchanged. This argument does not require \([Q_i,j_j]=0\), an exchange of local operators, or time-reversal symmetry. The equality of the two spatial integrals comes from (B.5) in the clustering thermodynamic state; finite-volume traces regulate the total-charge insertions before that limit.
 
 Combining \(\mathcal B=AC\), \(\mathcal B=\mathcal B^{\mathsf T}\), and \(C=C^{\mathsf T}\) gives
 \[
@@ -506,708 +933,214 @@ AC=(AC)^{\mathsf T}=C^{\mathsf T}A^{\mathsf T}=CA^{\mathsf T},
 \]
 which is Eq. (2.23). These steps reconstruct the identity stated by the paper; the intervening symbol \(\mathcal B\) is our explanatory notation, not a new numbered equation from the source.
 
-**Uniform charges versus quantum local sources.** This exact uniform GGE derivative involves a commuting total charge \(Q_j\). A spatially varying source coupled to quantum local densities generally differentiates a noncommuting exponential and produces a Kubo–Mori imaginary-time averaged insertion, not automatically the ordinary ordered local correlator. Thus this derivation does not remove the separate qualification of Appendix B's local ordered-response assumption (B.3). For a uniform commuting-charge variation, the insertion commutes with the GGE exponent and the Kubo–Mori integral reduces to the covariance above.
+### Why this proof does not settle the local-source issue
 
-**Which metric makes \(A\) self-adjoint?** Eq. (2.23) does **not** say \(A=A^{\mathsf T}\). For density perturbation vectors \(u,v\) on a positive-definite susceptibility sector, the natural inverse-covariance inner product is
+This exact uniform GGE derivative involves a commuting total charge \(Q_j\). A spatially varying source coupled to quantum local densities generally differentiates a noncommuting exponential and produces a Kubo–Mori imaginary-time averaged insertion, not automatically the ordinary ordered local correlator. Thus this derivation does not remove the separate qualification of Appendix B's local ordered-response assumption (B.3). For a uniform commuting-charge variation, the insertion commutes with the GGE exponent and the Kubo–Mori integral reduces to the covariance above.
+
+### Interpret the symmetry in density coordinates
+
+Eq. (2.23) does **not** say \(A=A^{\mathsf T}\). For density perturbation vectors \(u,v\) on a positive-definite susceptibility sector, the natural inverse-covariance inner product is
 \[
 (u,v)_{C^{-1}}=u^{\mathsf T}C^{-1}v,\qquad
 C^{-1}A=A^{\mathsf T}C^{-1}.
 \]
 Therefore \((u,Av)_{C^{-1}}=(Au,v)_{C^{-1}}\): \(A\) is self-adjoint in the **\(C^{-1}\) metric for density perturbations**, not generally in the \(C\) metric in those same coordinates. If \(C\) has null directions, first restrict to the independent positive-definite sector.
 
-Set \(B=C^{-1/2}AC^{1/2}\). Equation (2.23) implies \(A^{\mathsf T}=C^{-1}AC\), so \(B^{\mathsf T}=C^{1/2}A^{\mathsf T}C^{-1/2}=C^{-1/2}AC^{1/2}=B\). This is ordinary symmetry in the fluctuation-normalized coordinates \(C^{-1/2}\delta\bar q\). **Inference:** for a finite-dimensional independent sector, the linearized Euler modes can therefore be chosen with real velocities even when \(A\) looks nonsymmetric in the original density coordinates; infinitely many charges additionally require the appropriate operator-domain and spectral assumptions. Physically, \(AC\) combines velocity response with equilibrium fluctuation weights.
+An inner product defines how we compare the lengths and overlaps of density perturbations. Weighting by \(C^{-1}\) compensates for their different equilibrium fluctuation strengths. The equality just obtained says that \(A\) is self-adjoint for this inner product: moving \(A\) from one argument to the other does not change the result.
 
-#### Second moment: see exactly where \(t^2\) and \(t\) arise
-
-For \(t>0\), the two integrations by parts needed are
+We can also express this as ordinary matrix symmetry. Define \(\widehat A=C^{-1/2}AC^{1/2}\). Equation (2.23) gives
 
 \[
-\int dx\,x^2\partial_xS=-2M_1(t),\qquad
-\int dx\,x^2\partial_x^2S=2C.
+\widehat A^{\mathsf T}
+=C^{1/2}A^{\mathsf T}C^{-1/2}
+=C^{-1/2}AC^{1/2}=\widehat A.
 \]
 
-Multiplying Eq. (2.19) by \(x^2\) therefore gives
+The variables \(C^{-1/2}\delta\bar q\) have unit covariance, so they place the charge fluctuations on the same scale. In a finite-dimensional independent sector, the resulting symmetric Euler generator has real eigenvalues, which are the mode velocities. With infinitely many charges, this spectral conclusion also needs appropriate operator-domain assumptions. The physical content is that \(AC\) combines current response with equilibrium fluctuation weights.
+
+## D. Why does the density improvement preserve the Onsager matrix?
+
+The change of local representative is \(q_i'=q_i+\partial_xo_i\), \(j_i'=j_i-\dot o_i\), Eq. (2.28). A dot means the operator's time derivative. Integrating the current change over a time interval gives
+\[
+\int_{t_1}^{t_2}ds\,[j_i'(x,s)-j_i(x,s)]
+=-o_i(x,t_2)+o_i(x,t_1).
+\]
+So we have changed the assignment of local charge and its accompanying current by an **endpoint change** of the observable \(o_i\). This does not automatically prove transport invariance: we still have to show that the endpoint correlations do not change the long-time transport coefficient.
+
+The needed intuition is that an observable can contain both a part correlated with a conserved charge and a part whose correlations decay. Only the former retains long-time memory. Its endpoint values need not be zero; they must be the **same at the two ends** so that their difference cancels.
+
+Before proving the cancellation, we should specify what is supplied by the source. The paragraph after (2.28) asserts Onsager invariance assuming hydrodynamic projection. Appendix C.1, (C.1)–(C.2) and the following argument, sketches the boundary correction and calls it \(O(t^0)\), meaning bounded as \(t\) grows. Below we give a sufficient reconstruction of that argument, not a claim that the paper states or proves every limit assumption used here. Our correlation symbols and example are explanatory additions.
+
+### One conserved charge: what “projection” and a “plateau” mean
+
+We work in one homogeneous stationary GGE. Homogeneous means translation invariant; stationary means that correlations depend on the time difference, not on a common shift of both times. A **connected** correlation subtracts the product of the two means. Define an equal-time integrated overlap by
+\[
+(a,b)_0:=\int dx\,\langle a(x,0)b(0,0)\rangle^{\rm c}.
+\]
+For one conserved density \(q\), the susceptibility is
+\[
+C=(q,q)_0=\lim_{L\to\infty}\frac{\langle(Q-\langle Q\rangle)^2\rangle}{L},
+\qquad Q=\int_0^L dx\,q(x),\qquad C>0.
+\]
+Thus \(C\) measures the charge fluctuation per length. “Overlap” here means covariance, not an overlap of quantum state vectors.
+
+To extract the part of \(a\) correlated with this charge, choose
+\[
+\alpha=\frac{(a,q)_0}{C},\qquad
+\mathcal Pa=\alpha q,\qquad a_\perp=a-\alpha q.
+\]
+The division by \(C\) is forced by the requirement
+\[
+(a_\perp,q)_0=(a,q)_0-\alpha C=0.
+\]
+This is **covariance projection**: choose the multiple of the charge density that removes the charge overlap of the remainder. The split is algebraically exact. The claim that the remainder's relevant correlations relax is a separate physical assumption.
+
+For an explicit covariance example, let
+\[
+a=2q+r,\qquad (r,q)_0=(q,r)_0=0,
+\qquad C=3,\qquad (a,q)_0=6.
+\]
+Then \(\alpha=6/3=2\). Suppose the remaining integrated autocorrelation obeys
+\[
+R(u):=\int dx\,\langle r(x,u)r(0,0)\rangle^{\rm c}
+=5e^{-|u|/\tau},\qquad \tau>0.
+\]
+This exponential is an illustrative relaxation law, not a microscopic GHD calculation; only its large-time decay matters. Conserved-charge overlaps are time independent, so the cross terms stay zero and
+\[
+\int dx\,\langle a(x,u)a(0,0)\rangle^{\rm c}
+=4C+R(u)=12+5e^{-|u|/\tau}\longrightarrow12.
+\]
+A **conserved plateau** is precisely this nonzero constant left after the relaxing contribution disappears. “Plateaux” is just its plural. The plateau belongs to the integrated correlation; it does not say that \(a\) or a local density stops moving.
+
+In particular, spatial integration selects **zero wave number**: for the Fourier convention
+\[
+\widetilde S(k,u)=\int dx\,e^{-ikx}S(x,u),\qquad
+\int dx\,S(x,u)=\widetilde S(0,u).
+\]
+The zero-wave-number charge variable is the total \(Q\), which is conserved. The local \(q(x,u)\) need not be static: continuity gives \(\partial_uq=-\partial_xj\), allowing local transport and spreading while the total is fixed. The symbol \(\mathcal Pa=\alpha q\) therefore represents the conserved contribution **for these integrated correlations**, not a claim that \(\alpha q(x,u)\) is pointwise time independent.
+
+**Spatial clustering is not temporal relaxation.** Clustering says a connected correlation vanishes when the positions are far apart at a fixed time. Relaxation here says that, after integrating over position, its nonconserved contribution vanishes when the two times are far apart. A moving or broadening correlation profile can cluster in space while retaining a constant integrated weight. Clustering alone also does not guarantee convergence of the spatial integral.
+
+### Several charges: explain the inverse and the quantum operator order
+
+For several densities \(q_k\), the same zero-overlap requirement gives
+\[
+\mathcal Pa=(a,q_k)_0(C^{-1})_{k\ell}q_\ell,
+\qquad C_{k\ell}=(q_k,q_\ell)_0.
+\]
+Repeated indices are summed. Before using this inverse, we keep only independent charge combinations that actually fluctuate. This is what restricting to an independent susceptibility sector means. Counting the same charge twice makes \(C\) singular; a charge combination with zero fluctuation also gives a null direction. Remove these directions, or restrict to the nondegenerate fluctuating subspace, before writing \(C^{-1}\). This is the matrix version of requiring \(C>0\) before dividing by \(C\) in the one-charge example. For infinitely many charges, existence and domain of this inverse require further care.
+
+For quantum observables, we must also explain why the two ordered charge covariances agree. The argument uses a total conserved charge and trace cyclicity. Translation invariance turns an integrated density overlap into a total-charge overlap:
+\[
+(a,q)_0=\langle a(0)Q\rangle^{\rm c},\qquad
+(q,a)_0=\langle Qa(0)\rangle^{\rm c}.
+\]
+We first regulate these identities at finite volume. For mutually commuting GGE charges, \([Q,\rho]=0\), and trace cyclicity gives
+\[
+\operatorname{Tr}(\rho aQ)
+=\operatorname{Tr}(Q\rho a)
+=\operatorname{Tr}(\rho Qa).
+\]
+The connected subtraction is unchanged. Thus these charge overlaps agree, even if \([a,Q]\ne0\); the covariance projection has the required symmetric charge pairings. For Hermitian observables the charge pairing also supplies the usual real covariance with the Hermitian charges.
+
+This is **not permission for arbitrary local-operator swaps**. For generic \(A,B\), cyclicity only gives \(\operatorname{Tr}(\rho AB)=\operatorname{Tr}(B\rho A)\), not \(\operatorname{Tr}(\rho BA)\). The missing step would require moving \(B\) through \(\rho\), or another independent justification. A local density is not automatically interchangeable with its total charge in this respect. We never exchange the local current and improvement operators below.
+
+### What the two time directions mean
+
+The sufficient relaxation assumption used here is that, for the relevant pairs,
+\[
+\lim_{u\to+\infty}\int dx\,\langle a(x,u)b(0,0)\rangle^{\rm c}
+=\lim_{u\to-\infty}\int dx\,\langle a(x,u)b(0,0)\rangle^{\rm c}
+=(a,q_k)_0(C^{-1})_{k\ell}(q_\ell,b)_0.
+\]
+In the one-charge case the right side is \((a,q)_0(q,b)_0/C\). This says that only included conserved-charge contributions survive at large time separation.
+
+This is a relaxation assumption in both time directions: the statement holds when the first insertion is much later **and** when it is much earlier than the second. The variable \(u\) is the difference of two observation times in an equilibrium correlation. No dissipative state is being run backward, and no time-reversal symmetry is assumed. The positive- and negative-time functions may differ at finite \(u\); we require only their corresponding conserved limits to agree. An equilibrium correlation can lose its nonconserved memory as \(|u|\) increases on either side without any reversal of thermodynamic relaxation.
+
+### Apply this picture to the endpoint correction
+
+Define the three integrated correlations in the same state, with the displayed order fixed:
+\[
+\begin{aligned}
+F_{ij}(u)&=\int dx\,\langle o_i(x,u)j_j(0,0)\rangle^{\rm c},\\
+G_{ij}(u)&=\int dx\,\langle j_i(x,u)o_j(0,0)\rangle^{\rm c},\\
+H_{ij}(u)&=\int dx\,\langle o_i(x,u)o_j(0,0)\rangle^{\rm c}.
+\end{aligned}
+\]
+Here \(F_{ij}\) is not the equation-of-state function \(F_i(\bar q)\). Let \(K_{ij}(u)=\int dx\,\langle j_i(x,u)j_j(0,0)\rangle^{\rm c}\). Stationarity makes a time derivative at the second insertion minus a derivative with respect to \(u\); for example,
+\[
+\int dx\,\langle j_i(x,u)\dot o_j(0,0)\rangle^{\rm c}
+=-\frac{dG_{ij}}{du}.
+\]
+Expanding both improved currents gives the exact identity
+\[
+K'_{ij}-K_{ij}=-\frac{dF_{ij}}{du}+\frac{dG_{ij}}{du}
+-\frac{d^2H_{ij}}{du^2}=\frac{dB_{ij}}{du},
+\qquad B_{ij}:=-F_{ij}+G_{ij}-\frac{dH_{ij}}{du}.
+\]
+The minus sign in the last term comes from differentiating the second insertion, not from exchanging operators. Integrating yields
+\[
+\int_{-T}^{T}du\,[K'_{ij}-K_{ij}]=B_{ij}(T)-B_{ij}(-T).
+\]
+The projection assumption supplies \(F_{ij}(\pm\infty)=f_{ij}\) and \(G_{ij}(\pm\infty)=g_{ij}\). These conserved plateaux can be nonzero and need not equal each other. Each cancels against **itself at the other time endpoint**.
+
+We still need the derivative of \(H\). To control this derivative, we apply the same relaxation assumption to the observable \(\dot o_i\), not just to \(o_i\). Its charge overlap is zero:
+\[
+\int dx\,\langle o_i(x,u)q_k(0,0)\rangle^{\rm c}
+=\langle o_i(0,u)Q_k\rangle^{\rm c}
+\quad\text{is time independent},
+\qquad (\dot o_i,q_k)_0=0.
+\]
+To see the time independence, shift both times by \(-u\) using stationarity, and then use \(Q_k(-u)=Q_k(0)\). The same argument in its own order gives \((q_k,\dot o_i)_0=0\). Thus the projection of \(\dot o_i\) is zero. Applying relaxation to the pair \((\dot o_i,o_j)\) gives
+\[
+\frac{dH_{ij}}{du}
+=\int dx\,\langle\dot o_i(x,u)o_j(0,0)\rangle^{\rm c}
+\longrightarrow0\qquad(u\to\pm\infty).
+\]
+We did **not** differentiate a large-time limit of \(H\); a function approaching a constant does not by itself force its derivative to approach zero.
+
+We can now see explicitly why the endpoint correction vanishes:
+\[
+\boxed{
+F_{ij}(\pm\infty)=f_{ij},\quad G_{ij}(\pm\infty)=g_{ij},\quad
+\frac{dH_{ij}}{du}(\pm\infty)=0
+\quad\Longrightarrow\quad B_{ij}(\pm\infty)=-f_{ij}+g_{ij}.}
+\]
+Since the endpoint values are bounded, Eq. (2.15) gives \(D'_{ij}-D_{ij}=\lim_{T\to\infty}[B_{ij}(T)-B_{ij}(-T)]/(2T)=0\). We then subtract the same Drude matrix in Eq. (2.16), obtaining
+\[
+\boxed{\mathfrak L'_{ij}-\mathfrak L_{ij}
+=\lim_{T\to\infty}[B_{ij}(T)-B_{ij}(-T)]=0.}
+\]
+The total derivative has reduced the correction to an endpoint difference. The equality of the endpoint limits is the additional input that makes this difference vanish.
+
+### Reconnect to the diffusion matrix
+
+\(\mathfrak L\) measures residual correlation spreading after the ballistic contribution is removed. \(\mathfrak D\) instead specifies the gradient correction to a current written in chosen local density variables. Both \(\bar q_i'=\bar q_i+\partial_x\bar o_i\) and \(\bar j_i'=\bar j_i-\partial_t\bar o_i\) change that description at first-gradient order. Therefore \(\mathfrak D\) can change without changing \(\mathfrak L\). Its change and that of the first moment \(E\) preserve the spreading combination in (2.27), with the source-convention caution already noted above. The simple relation \(\mathfrak L=\mathfrak DC\) is the paper's PT-gauge identification (2.35), not a formula to impose in every representative. Here “gauge” means choice of local charge density, not electromagnetic gauge symmetry.
+
+### How strong are the assumptions in this proof?
+
+The endpoint calculation requires more than the formal appearance of a total derivative. We use a homogeneous stationary GGE built from mutually commuting charges and take the thermodynamic limit before the long-time limit. The spatial integrals and the differentiations must exist, and any exchanges of these operations must be justified. We also assume the original Onsager limit is finite. Once its endpoint correction tends to zero, the improved limit exists and has the same value.
+
+The projection must include all conserved contributions that survive in the relevant integrated correlations. The pointwise limits used here, including those for the pair \((\dot o_i,o_j)\), are sufficient assumptions. They are stronger than a projection statement holding only after time averaging or at the Euler scale. Appendix C.1 invokes hydrodynamic projection and sketches the cancellation, but does not spell out this full set of assumptions.
+
+We can check the same correction in the double time integral. For \(t>0\), supporting derivation B gives
 
 \[
-\frac{dM_2}{dt}=2AM_1(t)+\mathfrak DC. \tag{from 2.24}
+I_{ij}(t)=\int_{-t}^tdu\,(t-|u|)K_{ij}(u).
 \]
 
-The factor \(2\) in the first term comes from differentiating \(x^2\). In the second term it cancels the \(1/2\) in the paper's constitutive convention. Substitute \(M_1(t)=ACt+E\) *before* integrating:
+Writing \(\Delta I=I'-I\) and integrating the derivatives exactly gives
 
 \[
 \begin{aligned}
-M_2(t)-M_2(0)
-&=\int_0^t ds\,\big[2A(ACs+E)+\mathfrak DC\big]\\
-&=\boxed{A^2Ct^2+(2AE+\mathfrak DC)t}.
+\Delta I_{ij}(t)={}&-\int_0^tdu\,[F_{ij}(u)-F_{ij}(-u)]\\
+&+\int_0^tdu\,[G_{ij}(u)-G_{ij}(-u)]\\
+&+2H_{ij}(0)-H_{ij}(t)-H_{ij}(-t).
 \end{aligned}
 \]
 
-This equation exposes the mechanism. Propagation \(A\) acts on a first moment already growing as \(t\), producing \(t^2\). Diffusion acts on the constant zeroth moment \(C\), producing \(t\). The initial offset \(E\), transported by \(A\), also produces a term proportional to \(t\); it must not be mistaken for intrinsic diffusion.
+Each conserved plateau cancels within its own difference. This formula keeps the sign convention \(I'-I\) and includes the term involving both improvement operators. It reconstructs the full endpoint correction behind the paper's sketch.
 
-For the \(t<0\) branch, the same spatial integrals yield
+If the residual functions \(F-f\) and \(G-g\) have finite absolute time integrals on both sides and \(H\) is bounded, then \(\Delta I\) stays bounded as \(t\) increases. This is the meaning of the estimate \(O(t^0)\) asserted in Appendix C.1.
 
-\[
-\frac{dM_2}{dt}=2M_1(t)A^{\mathsf T}-C\mathfrak D^{\mathsf T}.
-\]
-
-Now set \(t=-\tau\), where \(\tau>0\), and integrate from \(0\) to \(-\tau\). The reversed time interval changes the signs of the terms linear in \(\tau\):
-
-\[
-\begin{aligned}
-M_2(-\tau)-M_2(0)
-&=\int_0^{-\tau}ds\,
-\big[2(ACs+E)A^{\mathsf T}-C\mathfrak D^{\mathsf T}\big]\\
-&=AC A^{\mathsf T}\tau^2
-+(C\mathfrak D^{\mathsf T}-2EA^{\mathsf T})\tau\\
-&=\boxed{A^2C\tau^2
-+(C\mathfrak D^{\mathsf T}-2EA^{\mathsf T})\tau}.
-\end{aligned}
-\]
-
-The last line uses \(AC=CA^{\mathsf T}\), which implies \(ACA^{\mathsf T}=A^2C\). No matrices were silently commuted.
-
-**Why this is not unstable backward diffusion.** The negative-\(t\) equation is a relation for a stationary correlator with its two insertions ordered oppositely in time. It is not an instruction to reconstruct a lost microscopic state by running a dissipative initial-value problem backward. With \(\tau=-t>0\), the diffusion term in the evolution of \(S(x,-\tau)\) has the usual forward sign. The right-acting transpose keeps track of which insertion is later.
-
-#### Match the two measurements of spreading
-
-Section 2.2 defines \(D\) and \(\mathfrak L\) through the time-symmetrized second moment [Eq. (2.14)]:
-
-\[
-\frac{M_2(\tau)+M_2(-\tau)}{2}-M_2(0)
-=D\tau^2+\mathfrak L\tau+o(\tau),\qquad \tau\to+\infty.
-\]
-
-Average the two expressions just derived. Matching the \(\tau^2\) coefficient gives
-
-\[
-\boxed{D=A^2C=ACA^{\mathsf T}.}
-\]
-
-**Physical meaning:** Euler-scale propagation and the equilibrium fluctuation weight determine the ballistic Drude term. Matching the \(\tau\) coefficient gives, by direct algebra,
-
-\[
-\boxed{\mathfrak L=
-\tfrac12(\mathfrak DC+C\mathfrak D^{\mathsf T})
-+AE-EA^{\mathsf T}.}
-\]
-
-**Physical meaning:** \(\mathfrak D\) broadens the fluctuations weighted by \(C\), but the chosen density representative may also carry the initial first moment \(E\). Thus one cannot yet identify \(\mathfrak L\) with \(\mathfrak D\) alone.
-
-**Source caution, not new physics:** printed Eqs. (2.26)–(2.27) place an additional factor \(1/2\) on the \(E\) terms. The direct two-branch integration above gives the displayed coefficient. The discrepancy is *apparent*, not an author-confirmed erratum; the review records the audit. It does not affect the later PT-gauge relation when \(E=0\). At our current stopping point, do not assume that gauge choice has already been made.
-
-**Outside perspective (one scalar mode).** If the background produces advection at speed \(v\) and ordinary diffusion coefficient \(\nu=\mathfrak D/2\), a normalized Gaussian solution has \(M_0=C\), \(M_1=Cvt\), and \(M_2=C(v^2t^2+2\nu t)\) when its initial first and second moments vanish. This elementary cartoon reproduces \(D=v^2C\) and the \(C\mathfrak D\,t\) term. In the interacting multi-charge problem the matrices, gauge choice, and correlation ordering require the fuller derivation above.
-
-## 5. Section 2.4, first question: why the local-density choice matters
-
-### The physical problem before the word “gauge”
-
-The previous section related the measurable spreading coefficients \(D,\mathfrak L\) to the hydrodynamic coefficients \(A,\mathfrak D\), but the relation still contained the first moment \(E\). Before computing \(\mathfrak D\) microscopically, the authors must specify which local density defines the hydrodynamic field. The total charge \(Q_i\) alone does not do that.
-
-**Outside perspective (discrete cartoon).** On a lattice, replacing \(q_i(n)\) by \(q_i(n)+o_i(n+1)-o_i(n)\) moves a little charge weight from one cell to its neighbor. Summing over \(n\) telescopes, so the total is unchanged. The continuum version is a spatial derivative. This is a change in how we assign local weight, not a change of the physical state.
-
-If boundary terms vanish, Eq. (2.28) permits
-
-\[
-q_i'=q_i+\partial_xo_i,\qquad
-j_i'=j_i-\partial_to_i.
-\]
-
-The spatial integral of \(\partial_xo_i\) vanishes, so \(Q_i'=Q_i\). The paired current change preserves continuity because mixed derivatives commute:
-
-\[
-\partial_tq_i'+\partial_xj_i'
-=\partial_tq_i+\partial_xj_i
-+\partial_t\partial_xo_i-\partial_x\partial_to_i=0.
-\]
-
-### Why the homogeneous equation of state and its Jacobian are unchanged
-
-The gauge transformation changes the operators used to represent the density and current. It preserves \(Q_i\), so it also preserves the entire family of homogeneous GGEs \(Z^{-1}\exp(-\sum_i\beta_iQ_i)\). We compare old and new operators in the *same* state, at every choice of the thermodynamic parameters.
-
-Homogeneity and stationarity mean that, for any local observable \(o_i\), its one-point function in that fixed state is independent of \(x\) and \(t\). They do not mean the operator itself has zero derivatives. Taking expectations of Eq. (2.28) gives
-
-\[
-\langle q'_i\rangle=\langle q_i\rangle+\partial_x\langle o_i\rangle
-=\langle q_i\rangle,\qquad
-\langle j'_i\rangle=\langle j_i\rangle-\partial_t\langle o_i\rangle
-=\langle j_i\rangle.
-\]
-
-The equation of state is defined by the homogeneous maximal-entropy state family, as explained in the §2.1 discussion above: \(F_i(\bar q)=\langle j_i\rangle\). Since both means are unchanged throughout that family, \(F'_i(\bar q)=F_i(\bar q)\) as functions, not merely at one background point. Thus Eq. (2.20) gives \(A'_i{}^j=\partial F'_i/\partial\bar q_j=\partial F_i/\partial\bar q_j=A_i{}^j\). This thermodynamic derivative compares different homogeneous states. It is not the spatial derivative \(\partial_xF_i\) within one homogeneous state: spatial uniformity does not imply \(A=0\).
-
-Agreement of the current in one GGE would establish only one common value of \(F_i\), not equality of its derivative. Nearby GGEs, parametrized by their density vectors, are needed to compare the slopes. The gauge argument works because it gives agreement throughout the homogeneous GGE family.
-
-### Why the integrated susceptibility is unchanged
-
-The physical interpretation gives a short route. Put the homogeneous state on a periodic ring of length \(\ell\). Translation invariance gives
-
-\[
-\langle Q_iQ_j\rangle^{\rm c}
-=\int_0^\ell dx\int_0^\ell dy\,
-\langle q_i(x)q_j(y)\rangle^{\rm c}
-=\ell\int_0^\ell dr\,S_{ij}(r,0).
-\]
-
-Thus the finite-volume integrated susceptibility is the total-charge covariance per unit length. Under the clustering assumptions, its thermodynamic limit is \(C_{ij}\) in Eq. (2.12). Since Eq. (2.28) leaves the total charge operators and the state unchanged, it leaves this covariance unchanged. The local allocation of charge can change the spatial shape of its correlations while preserving their integrated weight. This interpretation follows directly from the charge definition and translation invariance.
-
-One-point invariance alone does not prove invariance of a two-point function. Use Eq. (2.12) and transform both insertions. At equal time define
-
-\[
-R_{ij}(x)=\langle o_i(x)q_j(0)\rangle^{\rm c},\quad
-U_{ij}(x)=\langle q_i(x)o_j(0)\rangle^{\rm c},\quad
-V_{ij}(x)=\langle o_i(x)o_j(0)\rangle^{\rm c}.
-\]
-
-Translation invariance makes a derivative at the second insertion equal to minus a derivative of the separation \(x\). Expanding without exchanging operators therefore gives
-
-\[
-S'_{ij}(x,0)=S_{ij}(x,0)+\partial_xR_{ij}(x)
--\partial_xU_{ij}(x)-\partial_x^2V_{ij}(x).
-\]
-
-Integrating over all space,
-
-\[
-C'_{ij}-C_{ij}
-=\big[R_{ij}(x)-U_{ij}(x)-\partial_xV_{ij}(x)\big]_{-\infty}^{+\infty}
-=0,
-\]
-
-where the final step uses decay of connected correlations and their relevant derivatives. The local correlator \(S'(x,0)\) can change while its integrated weight \(C\) stays the same. Finally the ballistic relation in Eq. (2.27) gives \(D'=(A')^2C'=A^2C=D\). This concerns the Drude matrix \(D\), not the gradient coefficient \(\mathfrak D\).
-
-### Why preserving \(C\) does not preserve the first moment \(E\)
-
-The equality \(C'=C\) constrains only the integral of the correlation profile, not its value at each separation. The first moment in Eq. (2.22), \(E_{ij}=\int dx\,xS_{ij}(x,0)\), weights the profile by position. For example, the term \(\partial_xR_{ij}\) in the transformation of \(S\) contributes zero to \(C\), but contributes
-
-\[
-\int dx\,x\,\partial_xR_{ij}(x)
-=\big[xR_{ij}(x)\big]_{-\infty}^{+\infty}
--\int dx\,R_{ij}(x)
-=-\int dx\,R_{ij}(x)
-\]
-
-to \(E\), assuming the stronger boundary decay required for the first moment. Using the full transformation of \(S\) above gives
-
-\[
-E'_{ij}-E_{ij}=-\int dx\,R_{ij}(x)+\int dx\,U_{ij}(x).
-\]
-
-The double-derivative term from \(V_{ij}\) contributes zero after two integrations by parts. The remaining integrals need not vanish; they may vanish or cancel for particular improvements, so \(E\) can change rather than necessarily changing. Thus a local redistribution can leave the total correlation weight fixed while changing its first moment. These formulas are consequences of Eqs. (2.22), (2.28), translation invariance, and the stated boundary conditions. They explain why the \(E\) terms in the general transport relation must be tracked before a density representative is fixed.
-
-**Why the diffusion matrix is sensitive.** In a slowly varying state,
-
-\[
-\bar q_i'-\bar q_i=\partial_x\bar o_i=O(\partial_x).
-\]
-
-The current also changes by \(-\partial_t\bar o_i\). Using only the Euler equation inside that correction, \(\partial_t\bar q=-A\partial_x\bar q+O(\partial_x^2)\), shows \(\partial_t\bar o_i=O(\partial_x)\). Both changes occur at exactly the gradient order at which \(\mathfrak D\) is defined in Eq. (2.9). Thus the numerical matrix \(\mathfrak D_i{}^j\) can depend on the selected local representative even though the total conserved charges do not.
-
-Here is the order counting with indices. At Euler order write \(\bar o_i=O_i(\bar q)\) and \(B_i{}^j=\partial O_i/\partial\bar q_j\).
-
-The time derivative is evaluated by the chain rule and the Euler equation:
-
-\[
--\partial_tO_i(\bar q)
-=-\frac{\partial O_i}{\partial\bar q_j}\partial_t\bar q_j
-=\frac{\partial O_i}{\partial\bar q_j}A_j{}^k\partial_x\bar q_k
-+O(\partial_x^2).
-\]
-
-It is therefore first-gradient order even though it was originally written as a time derivative. The diffusive correction in the equation for \(\partial_t\bar q_j\) is second-gradient order; using it here would change the mean current only at \(O(\partial_x^2)\), beyond the coefficient defined by Eq. (2.9). Thus
-
-\[
-\bar q'_i=\bar q_i+B_i{}^j\partial_x\bar q_j+O(\partial_x^2),
-\qquad
--\partial_t\bar o_i
-=B_i{}^jA_j{}^k\partial_x\bar q_k+O(\partial_x^2).
-\]
-
-The first expression changes the variable used to parametrize the current; the second directly changes the current. Reexpressing \(F_i(\bar q)\) in terms of \(\bar q'\) adds a term involving \(A_i{}^jB_j{}^k\partial_x\bar q'_k\). These effects both live at first-gradient order and need not cancel when the charge indices mix. This is the concrete reason a coefficient of \(\partial_x\bar q\) can change while \(Q_i\), \(F_i\), and \(A_i{}^j\) do not. The exact transformation law is deferred; the source-audit review records its convention subtlety.
-
-### Why the Onsager matrix can remain invariant while \(\mathfrak D\) changes
-
-The paper asserts that the Onsager matrix \(\mathfrak L\), defined from the long-time spreading in Eq. (2.14), remains invariant under this change, using a hydrodynamic-projection assumption; see Appendix C.1. The route is through the exact sum rule (2.13). Define its double time integral, for \(t>0\),
-
-\[
-I_{ij}(t)=\int_0^t ds\int_0^t ds'\int dx\,
-\langle j_i(x,s)j_j(0,s')\rangle^{\rm c}.
-\]
-
-Replacing \(j_i\) by \(j_i-\partial_s o_i\) and \(j_j\) by \(j_j-\partial_{s'}o_j\) adds total time derivatives to this integrand. Integration produces endpoint correlators evaluated at time \(0\) or \(t\), rather than the original bulk double integral. Appendix C.1 invokes hydrodynamic projection to conclude that the combined correction is \(O(t^0)\). A boundary contribution is not automatically bounded: this long-time estimate is the substantive input in the argument.
-
-By the sum rule, the coefficients of \(t^2\) and \(t\) in \(I(t)\) are \(D\) and \(\mathfrak L\). A correction of order \(t^0\) changes neither, hence \(D'=D\) and \(\mathfrak L'=\mathfrak L\), under the stated assumption. Equality of total charges alone would not establish this estimate.
-
-As a counterfactual check, a correction \(bt+O(1)\) would shift \(\mathfrak L\) by \(b\) while leaving \(D\) unchanged. This is why the boundedness estimate, rather than merely the appearance of time-boundary terms, matters.
-
-The first moment \(E\) and \(\mathfrak D\) individually transform so that the combination describing this spreading stays fixed. This is why the authors must choose a gauge before assigning a definite diffusion matrix. Here **gauge** means freedom to choose a local representative of the same conserved charge. It is not electromagnetic or Yang–Mills gauge symmetry.
-
-### Why PT enters next
-
-The unresolved problem is to choose one local density from all the representatives of the same \(Q_i\). The paper uses a strong PT assumption: its antiunitary involution preserves the Hamiltonian, momentum, and every \(Q_i\), and sends local observables to local observables. Space and time both reverse. Hence the PT transform of \(q_i(x,t)\) is another local density of the same conserved charge. The paper asserts that these two local representatives can differ by a total spatial derivative:
-
-\[
-T q_i(x,t)T^{-1}
-=q_i(-x,-t)+\partial_x a_i(-x,-t). \tag{2.29}
-\]
-
-The total-derivative term is the same kind of local rearrangement as Eq. (2.28), not a new transport effect. Its existence uses locality beyond the statement that the spatial integrals agree.
-
-### Existence of a PT-adapted density: average the two representatives
-
-Here is an equivalent short construction of the existence result; the notation in this paragraph is introduced for the explanation. Define the PT partner at the same spacetime point by
-
-\[
-\widetilde q_i(x,t):=Tq_i(-x,-t)T^{-1}.
-\]
-
-It is local by the strong PT assumption, and its spatial integral is \(TQ_iT^{-1}=Q_i\). Equation (2.29) implies that it differs from \(q_i\) by a total spatial derivative, which we write as \(\widetilde q_i-q_i=\partial_xb_i\) with a local \(b_i\). Define
-
-\[
-q_i^{\rm PT}:=\frac12(q_i+\widetilde q_i)
-=q_i+\partial_x\left(\frac{b_i}{2}\right).
-\]
-
-This is an allowed change of representative under Eq. (2.28), so it preserves \(Q_i\). Applying the combined reflection and conjugation twice returns the original density, because \(T\) is an involution. It therefore exchanges \(q_i\) and \(\widetilde q_i\), leaving their average invariant:
-
-\[
-Tq_i^{\rm PT}(x,t)T^{-1}=q_i^{\rm PT}(-x,-t).
-\]
-
-This is the density transformation law in Eq. (2.30). Antiunitarity does not obstruct the averaging because its coefficient \(1/2\) is real. The physical input is the strong PT symmetry; the averaging is a choice of representative. Appendix C.2 gives the construction using \(a_i\), with \(o_i=-a_i/2\), Eq. (C.6), and treats the proper-gauge reality and uniqueness conditions. Those details are deferred here. The average preserves \(Q_i\) precisely because it differs from \(q_i\) by an allowed total derivative; equivalently, both densities have spatial integral \(Q_i\).
-
-### Why the current can obey the same PT transformation law
-
-After the density improvement, take its accompanying current from Eq. (2.28), so continuity is preserved. In this paragraph \(q_i\) denotes that PT-adapted density and \(j_i\) its accompanying current. Define \(\widetilde j_i(x,t)=Tj_i(-x,-t)T^{-1}\). Applying PT and reflecting coordinates in continuity gives
-
-\[
-\partial_tq_i(x,t)+\partial_x\widetilde j_i(x,t)=0.
-\]
-
-Both derivatives acquire a minus sign from coordinate reflection, so the transformed equation differs only by an overall sign. In particular, no additional minus sign on the current is needed under combined PT. Compare this equation with the original continuity equation to obtain
-
-\[
-\partial_x(\widetilde j_i-j_i)=0.
-\]
-
-Thus both currents give the same local rate of change of the chosen density. A useful explicit construction is to average them:
-
-\[
-j_i^{\rm PT}:=\frac12(j_i+\widetilde j_i).
-\]
-
-Its divergence equals that of \(j_i\), so it satisfies the same continuity equation. The involution exchanges the two summands, yielding \(Tj_i^{\rm PT}(x,t)T^{-1}=j_i^{\rm PT}(-x,-t)\), Eq. (2.31). Under the locality property used in Appendix C.2, a local observable with zero spatial derivative is proportional to the identity. Consequently this adjustment of the current amounts to an irrelevant constant shift. Such a shift does not change connected current correlations. This fixes the current's PT transformation without another change of the density.
-
-The physical content is that charge conservation is compatible with the combined spacetime reflection. The remaining constant choice is bookkeeping. Our checkpoint established the reason: a spatially constant addition has zero divergence, so it cannot change the local density evolution.
-
-### The GGE must also respect PT
-
-A symmetry of the equations does not automatically imply that every state respects it. Here the strong hypothesis preserves every charge entering the GGE. For real thermodynamic sources,
-
-\[
-\rho_\beta=Z^{-1}\exp\left(-\sum_i\beta_iQ_i\right),
-\qquad TQ_iT^{-1}=Q_i
-\quad\Longrightarrow\quad
-T\rho_\beta T^{-1}=\rho_\beta.
-\]
-
-This uses the GGE of Eq. (2.3), with the usual finite-volume definition before taking a thermodynamic limit. Antiunitarity conjugates scalar coefficients; the real \(\beta_i\) are unchanged. We now have both a PT-invariant state and PT-adapted local densities.
-
-### Antiunitarity: why reflection also conjugates the correlation
-
-We use the Heisenberg picture in Eq. (2.11). The stationary GGE density matrix \(\rho\) is fixed, and
-\[
-q_i(x,t)=e^{iHt/\hbar}q_i(x,0)e^{-iHt/\hbar},\qquad
-S_{ij}(x,t)=\operatorname{Tr}[\rho q_i(x,t)q_j(0,0)]^{\rm c}.
-\]
-Stationarity means \([\rho,H]=0\); it does not mean every local operator is time independent. The time label in the correlation is operator evolution. A Schrödinger-picture calculation gives the same correlation when the evolution factors and operator insertions are retained. It is not generally equivalent to an equal-time product in the state evolved to \(t\).
-
-Changing quantum-mechanical picture and applying a symmetry are different operations. Heisenberg versus Schrödinger determines where time evolution is written. PT maps states and observables to symmetry partners, in either picture.
-
-Why is the symmetry action on an observable \(O'=TOT^{-1}\)? If \(|\psi'\rangle=T|\psi\rangle\), then
-\[
-O'|\psi'\rangle=TO|\psi\rangle.
-\]
-This requires \(O'T=TO\), hence the conjugation formula. For a Hermitian observable, an eigenvalue \(a\) is real, and \(O|\psi\rangle=a|\psi\rangle\) implies \(O'T|\psi\rangle=aT|\psi\rangle\). The transformed observable measures the same real outcome in the transformed state.
-
-One can transform the state as well:
-\[
-\rho'=T\rho T^{-1},\qquad O'=TOT^{-1}.
-\]
-For antiunitary \(T\), the general relation is
-\[
-\operatorname{Tr}(\rho'O')=[\operatorname{Tr}(\rho O)]^*.
-\]
-For a Hermitian \(O\), the expectation is real, so corresponding measurement outcomes agree. For an ordered product \(O=AB\), the expectation can be complex and the conjugation matters. In our GGE, \(\rho'=\rho\); transforming the state returns the same state. Therefore the general relation becomes \(\langle TOT^{-1}\rangle_\rho=\langle O\rangle_\rho^*\). The state transformation was used through its invariance, rather than omitted.
-
-An antiunitary operator is conjugate-linear:
-
-\[
-T(c|\psi\rangle)=c^*T|\psi\rangle,\qquad
-\langle T\psi|T\phi\rangle=\langle\phi|\psi\rangle.
-\]
-
-In particular, \(TiT^{-1}=-i\). In a chosen orthonormal basis one can write \(T=UK\), where \(K\) conjugates vector components and \(U\) is unitary. Thus
-\(TOT^{-1}=UO^*U^\dagger\), where the star here means entrywise complex conjugation of a matrix, not its adjoint.
-
-For a PT-invariant density matrix, \(U\rho^*U^\dagger=\rho\). Consequently
-
-\[
-\begin{aligned}
-\langle TOT^{-1}\rangle
-&=\operatorname{Tr}(\rho UO^*U^\dagger)\\
-&=\operatorname{Tr}(U^\dagger\rho UO^*)\\
-&=\operatorname{Tr}(\rho^*O^*)\\
-&=[\operatorname{Tr}(\rho O)]^*
-=\langle O\rangle^*.
-\end{aligned}
-\]
-
-This is a finite-volume derivation of the expectation identity. The first complex conjugation is a matrix operation; the final one conjugates a complex number. A unitary symmetry would give equality without this final conjugation.
-
-Conjugation by \(T\) preserves product order:
-
-\[
-T(AB)T^{-1}=(TAT^{-1})(TBT^{-1}).
-\]
-
-It does not give the reversed product. Set
-\(A=q_i(x,t)\), \(B=q_j(0,0)\) and use the PT gauge (2.30). Then
-
-\[
-\begin{aligned}
-\langle q_i(x,t)q_j(0,0)\rangle^*
-&=\langle T[q_i(x,t)q_j(0,0)]T^{-1}\rangle\\
-&=\langle q_i(-x,-t)q_j(0,0)\rangle.
-\end{aligned}
-\]
-
-The subtracted one-point product transforms in exactly the same way. Applying the identity to the connected correlator defined in Eq. (2.11) therefore gives
-
-\[
-\boxed{S_{ij}(x,t)^*=S_{ij}(-x,-t).}
-\]
-
-Neither \(i,j\) nor the two insertions were exchanged. Coordinate reflection came from the transformation of the densities; complex conjugation came from the antiunitary transformation of the expectation value.
-
-Why can this correlation be complex if both densities are Hermitian? A product of Hermitian operators need not be Hermitian:
-\((AB)^\dagger=BA\). With real one-point means,
-
-\[
-\langle AB\rangle^{\rm c}
-=\frac12\langle\{A,B\}\rangle^{\rm c}
- +\frac12\langle[A,B]\rangle.
-\]
-
-Here the connected anticommutator means subtraction of \(2\langle A\rangle\langle B\rangle\). The first term is real; the second is purely imaginary. Therefore
-\(\operatorname{Im}\langle AB\rangle^{\rm c}
-=\langle[A,B]\rangle/(2i)\). Noncommutativity permits, but does not require, an imaginary part. At unequal times it is especially important not to assume the two densities commute.
-
-As a simple algebraic illustration, take \(A=\sigma_x\), \(B=\sigma_y\), and a spin-up state along \(z\). Both one-point means vanish, but \(AB=i\sigma_z\), hence \(\langle AB\rangle^{\rm c}=i\). This example only illustrates the product issue; it is not a model of the paper's PT-adapted densities.
-
-Writing \(S=R+iI\) with real \(R,I\), the PT relation means
-
-\[
-R_{ij}(-x,-t)=R_{ij}(x,t),\qquad
-I_{ij}(-x,-t)=-I_{ij}(x,t).
-\]
-
-At equal time, the real part is even in \(x\), while the imaginary part is odd. Its first moment can therefore be imaginary:
-
-\[
-E_{ij}^*
-=\int dx\,xS_{ij}(-x,0)
-=-E_{ij}.
-\]
-
-To conclude \(E_{ij}=0\) from this identity, one also needs \(E_{ij}\) real. Commuting observables or a real symmetrized correlation can supply reality; locality and possible contact terms must be considered when using equal-time microscopic densities. The displayed antiunitary identity alone does not settle those additional properties.
-
-Correction to our earlier explanation: changing variables always gives
-\(E_{ij}=-\int dx\,xS_{ij}(-x,0)\).
-PT identifies the integrand's correlation with \(S_{ij}(x,0)^*\), yielding \(E_{ij}=-E_{ij}^*\), not directly \(E_{ij}=-E_{ij}\). The earlier last equality assumed reality without establishing it. The results quoted next are the paper's assertions, with their elementary reflection proof conditional on real relevant moments. We have not established those reality conditions for every ordered quantum correlator.
-
-There is an essential quantum qualification. For an antiunitary symmetry in an invariant state,
-\(\langle T O T^{-1}\rangle=\langle O\rangle^*\). Transformation preserves the order of a product. Consequently the ordered correlator of Eq. (2.11) satisfies
-
-\[
-S_{ij}(x,t)^*=S_{ij}(-x,-t).
-\]
-
-It is not justified to erase the complex conjugation for an arbitrary ordered quantum correlator. The reflection argument below applies directly to real classical correlations, and to real hydrodynamic moments. A Hermitian symmetrized quantum correlation supplies one real convention, but the paper does not redefine Eq. (2.11) as that convention. The paper asserts Eqs. (2.32)–(2.34); the elementary proof requires reality of the relevant moments in addition to the displayed antiunitary transformation. For a general unsymmetrized quantum correlator, PT alone gives \(E^*=-E\), which permits an imaginary \(E\). This qualification is retained rather than silently treating an antiunitary operation as unitary.
-
-### The first moment vanishes and the second moment is even in time
-
-The paper asserts Eq. (2.33). The following elementary reflection proof is conditional on the relevant first moment being real; that condition must not be inferred from antiunitarity alone. Recall Eq. (2.22):
-
-\[
-E_{ij}=\int dx\,xS_{ij}(x,0).
-\]
-
-Changing variable \(x=-y\) and using the actual antiunitary reflection identity gives
-
-\[
-E_{ij}=-\int dy\,yS_{ij}(-y,0)
-       =-\int dy\,yS_{ij}(y,0)^*=-E_{ij}^*.
-\]
-
-If additionally \(E_{ij}=E_{ij}^*\), this becomes \(E_{ij}=-E_{ij}\), hence \(E_{ij}=0\), Eq. (2.33). This is a signed spatial moment of a cross correlation, not a claim that every \(S_{ij}\) is a probability density. The result removes the first-moment contribution that depended on our local representative.
-
-Define the change in the second moment by
-
-\[
-N_{ij}(t):=\int dx\,x^2[S_{ij}(x,t)-S_{ij}(x,0)].
-\]
-
-Because \(x^2\) is unchanged by reflection, the same PT argument gives \(N(t)=N(-t)\). Thus
-
-\[
-\frac12[N(t)+N(-t)]=N(t), \tag{2.32}
-\]
-
-which explains why the time-symmetrized spreading in the exact sum rule (2.13) becomes the positive-time spreading alone. With complex ordered quantum moments, the symmetry relation is instead \(N(t)^*=N(-t)\); the equality just used requires their reality.
-
-### Matching the two time branches fixes the matrix order
-
-The integrations of Eqs. (2.24)–(2.25), derived in our §2.3 discussion, give for \(t>0\), at the retained hydrodynamic orders,
-
-\[
-\begin{aligned}
-N(t)&=A^2Ct^2+(2AE+\mathfrak DC)t,\\
-N(-t)&=A^2Ct^2+(C\mathfrak D^{\mathsf T}-2EA^{\mathsf T})t.
-\end{aligned}
-\]
-
-The transpose in the second line comes from evolution acting on the second charge index; operator order was preserved throughout that derivation. Set \(E=0\), then equate the two branches. Their common ballistic term cancels, leaving
-
-\[
-\boxed{\mathfrak DC=C\mathfrak D^{\mathsf T}},\qquad
-\mathfrak D_i{}^kC_{kj}=C_{ik}\mathfrak D_j{}^k. \tag{2.34}
-\]
-
-This says that \(\mathfrak DC\) is symmetric when \(C=C^{\mathsf T}\); it need not make \(\mathfrak D\) symmetric in the original density coordinates. For example, if
-\(C=\operatorname{diag}(c_1,c_2)\), its off-diagonal condition is
-\(\mathfrak D_1{}^2c_2=c_1\mathfrak D_2{}^1\). Unequal susceptibilities allow unequal off-diagonal diffusion entries.
-
-When \(C\) is positive definite, use fluctuation coordinates \(u=C^{-1/2}\delta q\). Their covariance is the identity, and their diffusion matrix
-\(C^{-1/2}\mathfrak DC^{1/2}\) is symmetric. This is an explanatory consequence of Eq. (2.34), not an additional equation quoted from the paper.
-
-### Why the result is \(\mathfrak L=\mathfrak DC\)
-
-With \(E=0\), the general relation (2.27) reduces to
-
-\[
-\mathfrak L=\frac12(\mathfrak DC+C\mathfrak D^{\mathsf T}).
-\]
-
-Equation (2.34) makes its two summands equal. Therefore
-
-\[
-\boxed{D=A^2C,\qquad \mathfrak L=\mathfrak DC}. \tag{2.35}
-\]
-
-Here \(D\) is the Drude matrix and \(\mathfrak D\) is the diffusion matrix. The possible factor discrepancy in the earlier \(E\) terms is irrelevant once \(E=0\).
-
-The factor \(C\) has a physical job. The diffusion matrix describes the evolution of density perturbations. A correlation measures the spreading of fluctuations already present in the state, whose integrated weight is \(C\). The coefficient of the correlation's diffusive second-moment growth therefore combines broadening with this weight.
-
-For one conserved density with Euler speed \(v\), the linearized equation is
-
-\[
-\partial_tS+v\partial_xS=\frac{\mathfrak D}{2}\partial_x^2S.
-\]
-
-A localized packet of integrated weight \(C\) has variance growth \(\mathfrak D t\). Its unnormalized second moment grows as \(Cv^2t^2+C\mathfrak Dt\), matching \(D=v^2C\) and \(\mathfrak L=\mathfrak DC\). The conventional coefficient \(\nu\) in \(\nu\partial_x^2S\) is \(\nu=\mathfrak D/2\); this explains the factor of two in the paper's convention.
-
-On a sector where \(C\) is invertible,
-
-\[
-\mathfrak D=\mathfrak L C^{-1}.
-\]
-
-Matrix order matters. Combining this with the current-correlation formula (2.16) is the paper's route to computing diffusion. The static fluctuations supply \(C\), while the time-integrated current fluctuations after ballistic subtraction supply \(\mathfrak L\). For infinitely many charges, inversion is understood on an appropriate nondegenerate sector.
-
-The logical chain is: strong PT supplies a compatible representative and invariant GGE; reflection removes \(E\) and matches the second-moment branches; their matching makes \(\mathfrak DC\) symmetric; the general spreading formula then yields Eq. (2.35). This use of microscopic time reversal does not assert that reversing time in the diffusive initial-value equation produces another forward diffusion process. The two equilibrium correlation branches are related by stationarity and symmetry.
-
-## Section 2.5: when the current is itself a conserved density
-
-Return to the transport argument after the quantum-symmetry clarification. We follow the paper's PT gauge and its asserted relation \(\mathfrak L=\mathfrak DC\), Eq. (2.35). Section 2.5 uses this relation to identify an entire zero row of the diffusion matrix.
-
-The additional microscopic input is the local operator identity
-\[
-j_0(x,t)=q_1(x,t). \tag{2.36}
-\]
-Here \(q_1\) is the density of another conserved charge \(Q_1=\int dx\,q_1(x,t)\). This is stronger than equality of current and density expectations in one GGE. It also says much more than conservation of \(Q_0\): ordinary continuity conserves \(Q_0\), but does not generally conserve its integrated current.
-
-With (2.36), that integrated current is conserved:
-\[
-J_0(t):=\int dx\,j_0(x,t)=Q_1.
-\]
-Physical examples in the paper are the mass current equal to momentum density in Galilean systems, and energy current equal to momentum density in relativistic systems. The mass normalization matters: particle-number current equals momentum density divided by the particle mass. Another example stated in §2.5 is the XXZ energy current, which belongs to its conserved-charge tower.
-
-To see the consequence, define the spatially integrated current correlation
-\[
-K_{0j}(s):=\int dx\,\langle j_0(x,s)j_j(0,0)\rangle^{\rm c}.
-\]
-Apply the operator identity before taking an expectation:
-\[
-K_{0j}(s)
-=\int dx\,\langle q_1(x,s)j_j(0,0)\rangle^{\rm c}
-=\langle Q_1j_j(0,0)\rangle^{\rm c}.
-\]
-The right-hand side has no \(s\) dependence because \(Q_1\) is exactly conserved. The second operator remains fixed and product order remains \(Q_1j_j\). One can define this on a finite periodic ring before taking the thermodynamic limit. Equivalently, differentiating the first density and using its continuity equation gives a spatial boundary term that vanishes.
-
-The expression printed in Eq. (2.38) displays \(q_0\) on its right-hand side. The substitution from Eq. (2.36) requires \(q_1\). This is an apparent index typo, not an author-confirmed erratum; our derivation uses \(q_1\).
-
-Now use the definitions of the transport coefficients, retaining the distinction between Drude \(D\) and diffusion \(\mathfrak D\). Since \(K_{0j}(s)\) is constant,
-\[
-D_{0j}
-=\lim_{t\to\infty}\frac1{2t}\int_{-t}^{t}ds\,K_{0j}(s)
-=K_{0j}, \tag{from 2.15}
-\]
-and therefore
-\[
-\mathfrak L_{0j}
-=\lim_{t\to\infty}\int_{-t}^{t}ds\,[K_{0j}(s)-D_{0j}]
-=0. \tag{from 2.16}
-\]
-The subtraction vanishes at every time. There is no residual integrated current correlation left to generate the Onsager coefficient. The Drude coefficient can still be nonzero.
-
-Equation (2.35) then gives
-\[
-0=\mathfrak L_{0j}=\mathfrak D_0{}^kC_{kj}.
-\]
-On an invertible susceptibility sector, multiply on the right by \(C^{-1}\):
-\[
-\boxed{\mathfrak D_0{}^i=0\quad\text{for every }i.} \tag{2.37}
-\]
-If \(C\) has null directions, the direct conclusion is that this row annihilates \(C\); the zero-row statement applies to the independent thermodynamic sector. This is the same inversion qualification as in §2.4.
-
-What precisely vanishes? In the constitutive relation (2.9),
-\[
-\bar j_0
-=F_0(\bar q)-\frac12\mathfrak D_0{}^i\partial_x\bar q_i
- +O(\partial_x^2),
-\]
-all the first-gradient corrections in this current vanish. With the selected density variables, the operator identity gives \(\bar j_0=\bar q_1\) exactly. Thus its continuity equation is \(\partial_t\bar q_0+\partial_x\bar q_1=0\).
-
-This does not remove transport or all broadening of a \(q_0\) profile in a coupled fluid. The \(q_1\) dynamics can involve other fields and dissipative terms, so coupled modes may still damp. Equation (2.37) is a statement about the row of the constitutive diffusion matrix in the chosen variables. It does not imply that every diffusion eigenvalue is zero.
-
-In the PT setting \(\mathfrak L\) is symmetric, so its zero row also gives a zero column. Since \(\mathfrak D=\mathfrak LC^{-1}\), multiplication by \(C^{-1}\) can mix columns; a zero row of \(\mathfrak D\) does not in general imply a zero column in the original density coordinates.
-
-The useful proof to remember is
-\[
-j_0=q_1
-\ \Longrightarrow\ J_0=Q_1\text{ conserved}
-\ \Longrightarrow\ K_{0j}(s)\text{ constant}
-\ \Longrightarrow\ K_{0j}=D_{0j}
-\ \Longrightarrow\ \mathfrak L_{0j}=0
-\ \Longrightarrow\ \mathfrak D_0{}^i=0.
-\]
-The first arrow is a special microscopic identity, the middle arrows use the exact correlation definitions, and the last arrow uses the PT-gauge identification and invertibility. This completes §2. Section 3 introduces quasiparticle variables to calculate the current correlations and susceptibilities entering these formulas.
-
-## Section 3: supply the microscopic inputs to the bridge
-
-Section 2 leaves us with \(\mathfrak D=\mathfrak L C^{-1}\) in the paper's PT framework. We therefore need static density fluctuations and the residual time-integrated current correlation. Section 3 begins by naming the microscopic correlation to compute,
-\[
-\Gamma_{ij}(x,t)=\langle j_i(x,t)j_j(0,0)\rangle^{\rm c}. \tag{3.1}
-\]
-Then \(K_{ij}(t)=\int dx\,\Gamma_{ij}(x,t)\) enters the Drude and Onsager definitions. Its value depends on the background stationary state, so we must first specify that state in variables adapted to the integrable model.
-
-Our route within §3 is: §3.1 describes a homogeneous state with quasiparticles; §3.2 lets that state vary slowly in space and time to recover Euler GHD; §3.3 introduces particle–hole excitations and form factors to compute correlations; §3.4 checks the machinery against Euler-scale transport. Section 4 then uses it for diffusion. These later steps are previews; the current unit supplies the first state variables and dressing.
-
-### Section 3.1, first unit: from Bethe roots to a stationary macrostate
-
-Initially the paper takes a ring of length \(L\), one quasiparticle type, real rapidities, and \(p'(\theta)>0\). An eigenstate has Bethe roots \(\{\theta_a\}\). Rather than retaining their individual positions, define a rapidity density by counting roots in a small bin:
-\[
-\#\{\theta_a\in[\theta,\theta+d\theta]\}
-\simeq L\rho_{\rm p}(\theta)d\theta.
-\]
-The bin is small on the variation scale of the smooth density but contains many roots in the thermodynamic limit. Consequently \(\int d\theta\,\rho_{\rm p}(\theta)=N/L\). This is a density per physical length and per rapidity, not a probability distribution.
-
-Many eigenstates share the same smooth \(\rho_{\rm p}\); specifying it discards microscopic information. It describes a macrostate. Within the thermodynamic description and equivalence of ensembles for local observables, this provides a way to represent the local properties of a homogeneous GGE. We are not identifying an arbitrary pure state with a mixed GGE as density matrices.
-
-This is the physical reason quasiparticle variables help: instead of tracking infinitely many separate charges, we describe which quasiparticles populate the state. A quasiparticle carrying a one-particle charge eigenvalue \(h_i(\theta)\) contributes to the charge density through the root distribution. The explicit charge and current formulas will be taken up later in §3.1.
-
-### Three densities and one filling
-
-In the Bethe counting description, \(\rho_{\rm s}(\theta)\) counts available rapidity modes, \(\rho_{\rm p}(\theta)\) counts occupied ones, and \(\rho_{\rm h}(\theta)=\rho_{\rm s}(\theta)-\rho_{\rm p}(\theta)\) counts holes. All three are densities per length and rapidity. Their ratio is
-\[
-n(\theta)=\frac{\rho_{\rm p}(\theta)}{\rho_{\rm s}(\theta)}. \tag{3.6}
-\]
-The fermionic Bethe occupation interpretation gives \(0\leq n\leq1\). “Fermionic” here concerns occupation of Bethe modes and need not mean the microscopic physical particles are fermions. The paper later treats more general statistics; the literal hole interpretation should not be imposed unchanged on every such model.
-
-For an illustrative bin of 100 available Bethe modes, 30 occupied modes give \(n=0.3\) and 70 holes. But the available-mode density itself changes with the background distribution in an interacting Bethe system. Occupying modes does not simply fill a rigid free-particle list.
-
-### Scattering changes the available-mode density
-
-The model supplies a bare momentum \(p(\theta)\) and a two-body scattering amplitude \(S(\theta,\alpha)\). In Eq. (3.3), this \(S\) is a scattering amplitude, not our earlier density correlation \(S_{ij}(x,t)\). Its differential phase is
-\[
-T(\theta,\alpha)=\frac{1}{2\pi i}\partial_\theta\log S(\theta,\alpha). \tag{3.3}
-\]
-This \(T\) is a real integral kernel in the physical cases considered here, not the antiunitary PT operator of §2.4. Context distinguishes the notation.
-
-Differentiating the Bethe counting equation gives
-\[
-\boxed{\rho_{\rm s}(\theta)=\frac{p'(\theta)}{2\pi}
-+\int d\alpha\,T(\theta,\alpha)\rho_{\rm p}(\alpha).} \tag{3.4}
-\]
-The first term is the bare mode density. For free quantization \(Lp(\theta)=2\pi I\), differentiation gives \(L^{-1}dI/d\theta=p'/(2\pi)\). The integral term is the change from scattering with all occupied rapidities in the background. Its sign depends on the model's differential phase; it need not always increase the density of states.
-
-The paper assumes \(T(\theta,\alpha)=T(\alpha,\theta)\), Eq. (3.5), for this initial presentation. That symmetry is a model/convention condition here, not the definition of every possible scattering kernel.
-
-### Dressing solves this background feedback
-
-Insert \(\rho_{\rm p}=n\rho_{\rm s}\) into Eq. (3.4):
-\[
-\rho_{\rm s}(\theta)=\frac{p'(\theta)}{2\pi}
-+\int d\alpha\,T(\theta,\alpha)n(\alpha)\rho_{\rm s}(\alpha). \tag{3.7}
-\]
-Given \(n\), solve for \(\rho_{\rm s}\), then recover \(\rho_{\rm p}=n\rho_{\rm s}\). Thus \(n\) and \(\rho_{\rm p}\) are alternative state descriptions, under the stated solvability conditions.
-
-For any function \(h\), define its dressing by the same integral equation:
-\[
-\boxed{h^{\rm dr}(\theta)=h(\theta)
-+\int d\alpha\,T(\theta,\alpha)n(\alpha)h^{\rm dr}(\alpha).}
-\]
-In the paper's operator notation,
-\[
-h^{\rm dr}=(1-Tn)^{-1}h,\tag{3.9}
-\]
-\[
-2\pi\rho_{\rm s}=(1-Tn)^{-1}p'=(p')^{\rm dr}. \tag{3.8}
-\]
-The order \(Tn\) matters:
-\((Tnh)(\theta)=\int d\alpha\,T(\theta,\alpha)n(\alpha)h(\alpha)\),
-whereas \((nTh)(\theta)=n(\theta)\int d\alpha\,T(\theta,\alpha)h(\alpha)\).
-They are generally different. The inverse notation assumes an appropriate solvable integral equation. A formal series \(h+Tnh+(Tn)^2h+\cdots\) illustrates repeated background feedback, but is not a convergence claim for every state.
-
-Dressing is a state-dependent modification by the occupied background. For \(T=0\), it disappears: \(h^{\rm dr}=h\) and \(\rho_{\rm s}=p'/(2\pi)\), independent of the filling. Dressing already contributes to Euler-scale quantities; it is not itself the diffusion term. We still need current correlations and their residual part to compute \(\mathfrak L\).
-
-Our completed piece of the story is now:
-\[
-\text{stationary state}
-\ \leftrightarrow\ \rho_{\rm p}\text{ or }n
-\ \longrightarrow\ \rho_{\rm s}\text{ and dressing in that background}.
-\]
-The next piece of §3.1 will relate the state to GGE sources and quasiparticle statistics and produce the charge/current data needed for fluctuations and propagation. The particle–hole correlation machinery comes afterward.
-
-## Which inputs are assumptions?
-
-| Input | Why it is needed | Status here |
-| --- | --- | --- |
-| Local relaxation and hydrodynamic closure, Eqs. (2.4), (2.8) | Replace microscopic states by slow density profiles | Hydrodynamic postulate |
-| Local gradient expansion, Eq. (2.9) | Define \(F\) and \(\mathfrak D\) | Long-wavelength assumption |
-| Decay of correlations and finite transport limits | Discard spatial boundary terms and obtain finite \(D,\mathfrak L\) | Regularity conditions |
-| Ordered initial-source response, Eq. (B.3) | Convert the closure of means into correlator equations | Explicit paper input at diffusive order; quantum ordering needs care |
-| Hydrodynamic projection in Appendix C.1 | Show \(\mathfrak L\) is invariant under Eq. (2.28) | Paper's assumption in its gauge argument |
-| Strong PT hypothesis in §2.4 | Supply a symmetry-adapted local representative and invariant GGE | Model-dependent symmetry assumption |
-| Reality of the relevant correlation moments | Turn antiunitary conjugate reflection into the equalities used for (2.32)–(2.34) | Automatic classically; requires care for ordered quantum correlations |
-
-## What to know now
-
-| Reproduce yourself | Recognize, then postpone |
-| --- | --- |
-| Continuity + two integrations by parts: \(M_2''=2K\). | The full Appendix A integration. |
-| Response chain rule: mean-current closure → positive-time Eq. (2.19). | General quantum source construction beyond the paper's ordered-response assumption. |
-| Eq. (B.5), translation without operator exchange, and why the negative-time matrices are transposed. | Detailed PT gauge-fixing machinery in Appendix C. |
-| Gradient order counting in Eq. (2.28): \(\partial_xo\) and \(-\partial_to\) can affect \(\mathfrak D\). | Exact transformation formulas for every gauge-dependent matrix. |
-
-**One checkpoint for our current stopping point:** At fixed bare momentum and scattering kernel, why can changing the filling \(n\) change the available-mode density \(\rho_{\rm s}\) in an interacting model? What changes in the case \(T=0\)?
+A weaker assumption gives a weaker estimate. If those residuals merely tend to zero and \(H\) stays bounded, the correction can still grow, but its ratio to \(t\) tends to zero: \(\Delta I=o(t)\). That is enough to preserve the coefficient linear in time, but it does not prove that the correction is bounded. The direct Green–Kubo endpoint proof above needs equal endpoint limits and derivative-correlation relaxation; it does not require absolute integrability of every mixed residual.
