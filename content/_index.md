@@ -62,22 +62,21 @@ sections:
       view: article-grid
       columns: 2
   - block: markdown
+    id: presentations
     content:
-      title: 'Presentation ppt'
+      title: 'Presentations'
       subtitle: ''
       text: |-
-        - My first presentation(date:1.21). Click to view the [PDF document](/files/presentation.pdf).
-        - My second presentation(date:3.1). Click to view the [PDF document](/files/presentation2.pdf).
+        Research talks and guided presentations are collected separately from study notes. Browse [all presentations](/presentation/).
     design:
       columns: '1'
-  
+
   - block: collection
-    id: papers
     content:
-      title: Research Presentation
+      title: Featured Presentations
       filters:
         folders:
-          - publication
+          - presentation
         featured_only: true
     design:
       view: article-grid

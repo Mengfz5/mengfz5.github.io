@@ -1,12 +1,14 @@
 ---
-title: "Phenomenological theory of unconventional superconductivity "
+aliases:
+  - /publication/presentation/
+title: "Symmetry of the order parameter for high-temperature superconductivity "
 authors:
 - admin
-date: "2025-03-01T00:00:00Z"
+date: "2025-01-21T00:00:00Z"
 doi: ""
 
 # Schedule page publish date (NOT publication's date).
-publishDate: "2025-03-01T00:00:00Z"
+publishDate: "2025-01-10T00:00:00Z"
 
 # Publication type.
 # Accepts a single type but formatted as a YAML list (for Hugo requirements).
@@ -17,20 +19,20 @@ publication_types: ["presetation"]
 publication: ""
 publication_short: ""
 
-abstract: This report started from BCS theory. After defining gap functions and deriving the  self-consistant equation, we introduce superconductor phase transition as a conclution of symmetry breaking. We also analyse the coexistence of antiferromagnetism and superconductivity using Green's function method. 
+abstract: The system we consider has some symmetry properties which can be compacted into a symmetry gorup. By analysing the symmetry group, we can simply write down the singlet and triplet superconductor free energy described by order parameters. There many mathmatical techniques used in this method such as decomposition of reducible representation, C-G formalism, etc.
 
 # Summary. An optional shortened abstract.
-summary: This report started from BCS theory. After defining gap functions and deriving the  self-consistant equation, we introduce superconductor phase transition as a conclution of symmetry breaking. We also analyse the coexistence of antiferromagnetism and superconductivity using Green's function method. 
+summary: The system we consider has some symmetry properties which can be compacted into a symmetry gorup. By analysing the symmetry group, we can simply write down the singlet and triplet superconductor free energy described by order parameters. There many mathmatical techniques used in this method such as decomposition of reducible representation, C-G formalism, etc.
 
 tags:
-- Phnomenological theory
+- symmetry analysis
 
 featured: true
 
 links:
 - name: Custom Link
   url: ''
-url_pdf:  ''
+url_pdf: "/presentation/superconductivity-symmetry/presentation.pdf"
 url_code: ''
 url_dataset: ''
 url_poster: ''
@@ -51,18 +53,17 @@ image:
 #   Simply enter your project's folder or file name without extension.
 #   E.g. `internal-project` references `content/project/internal-project/index.md`.
 #   Otherwise, set `projects: []`.
-projects:
-- internal-project
+projects: []
 
 # Slides (optional).
 #   Associate this publication with Markdown slides.
 #   Simply enter your slide deck's filename without extension.
 #   E.g. `slides: "example"` references `content/slides/example/index.md`.
 #   Otherwise, set `slides: ""`.
-slides: example
+slides: ""
 
 ---
-See more infomation check my [beamer](presentation2.pdf)
+See more infomation check my [beamer](presentation.pdf)
 
 {{% callout note %}}
 
