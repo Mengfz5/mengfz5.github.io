@@ -14,6 +14,11 @@ tags:
   - presentation
 featured: true
 math: false
+url_pdf: "/notes/ghd-advisor-slides.pdf"
+image:
+  caption: "First slide of the GHD presentation"
+  focal_point: "Center"
+  preview_only: false
 ---
 
 {{% callout note %}}
