@@ -3,7 +3,7 @@ title: "Diffusion in GHD — Detailed Study Notes"
 authors:
   - admin
 date: 2026-09-28
-summary: "A guided study of diffusion in generalized hydrodynamics through sections 2.1–2.5 and the opening of 3.1, with supporting derivations for susceptibility, transport sum rules, flux-Jacobian symmetry and Onsager invariance."
+summary: "A guided study of diffusion in generalized hydrodynamics through sections 2.1–2.5 and section 3.1 effective velocities, Eq. (3.20), with local ensemble equivalence, pseudoenergy, charge/current formulas and supporting derivations."
 tags:
   - generalized hydrodynamics
   - GHD
@@ -12,18 +12,22 @@ tags:
   - integrable systems
 featured: true
 math: true
-lastmod: 2026-10-05
+lastmod: 2026-10-06
 ---
 
 {{% callout note %}}
 This study note was generated with GPT assistance during guided reading, then source-checked and tutor-reviewed. It is a personal learning reference; verify equations, conventions, and interpretations against the original paper before citing or reusing it.
 {{% /callout %}}
 
+**Companion slides:** [GHD presentation and PDF download](/study-note/ghd-presentation/). The slide deck covers the earlier material through dressing, Eq. (3.9); this detailed note continues through effective velocity, Eq. (3.20).
+
 J. De Nardis, D. Bernard and B. Doyon, *Diffusion in generalized hydrodynamics and quasiparticle scattering*, SciPost Phys. **6**, 049 (2019), arXiv:1812.00767v4.
 
-We have studied the introduction, §§2.1–2.5, Appendix B, and the opening of §3.1 through dressing, Eq. (3.9). This note follows that material in the order needed to understand the argument. The later sections appear only in the roadmap.
+We have studied the introduction, §§2.1–2.5, Appendix B, and the opening of §3.1 through dressing, local ensemble equivalence, the meaning of the pseudoenergy equation (3.14), the density and current formulas (3.16), (3.18), and the effective velocity in scattering and dressed form, Eqs. (3.19)–(3.20). The entropy and free-energy derivations remain to be studied. This note follows that material in the order needed to understand the argument. The later sections appear only in the roadmap.
 
 The [minimum note](/notes/ghd-sections-1-to-2-3-minimal.pdf) is the companion for quick review. Here we explain the reasoning in full sentences and work through the essential calculations. Longer supporting proofs are collected at the end, where you can return to them without losing the main story. The source-audit review records apparent discrepancies in the [paper on arXiv](https://arxiv.org/abs/1812.00767).
+
+**Pace of our lessons.** We will work through one physical question and one main result at a time. Each lesson will briefly locate that question in the paper's larger argument, explain the necessary steps, and then pause for questions and reflection before introducing another result. The note gathers these smaller discussions into a continuous explanation; its chapter boundaries do not determine how much we cover in a single lesson.
 
 ## 1. The question that connects everything
 
@@ -600,9 +604,8 @@ Our earlier explanation incorrectly replaced the last expression by \(-E\) witho
 Likewise, with \(N(t)=M_2(t)-M_2(0)\), reflection gives \(N(t)^*=N(-t)\). The paper asserts the stronger moment statements
 
 \[
-E=0, \tag{2.33}
-\]
-\[ \frac12[N(t)+N(-t)]=N(t). \tag{2.32}
+E=0,
+\qquad \frac12[N(t)+N(-t)]=N(t). \tag{2.32}
 \]
 
 The elementary reflection proof establishes these if the relevant moments are real. Reality is automatic for classical correlations; a Hermitian symmetrized quantum correlation is another real convention. However, Eq. (2.11) defines an ordered correlation, and we have not established the needed reality conditions for every such quantum moment. Locality and possible equal-time contact terms require their own analysis. We retain this qualification when using the paper's stated PT-gauge results.
@@ -713,7 +716,119 @@ Define the occupied density by counting roots in a small rapidity bin:
 
 The bin is small compared with the scale on which the smooth distribution varies but contains many roots as \(L\) grows. Thus \(\rho_{\rm p}\) counts quasiparticles per physical length and per rapidity, and \(\int d\theta\,\rho_{\rm p}=N/L\). It is not a probability density normalized to one.
 
-Many eigenstates have the same smooth distribution. Their shared thermodynamic description is called a **macrostate**. Within the equivalence of ensembles for local observables, this distribution can represent the local properties of a homogeneous GGE. This equivalence concerns thermodynamic expectations, not equality between an arbitrary pure-state density matrix and a mixed ensemble.
+Many microscopic Bethe eigenstates can approach the same smooth \(\rho_{\rm p}(\theta)\) as \(L\) grows, even though their individual roots differ. Their shared large-system description is called a **macrostate**. Think of a rapidity histogram: different lists of roots can give the same smooth histogram once we stop resolving each root. The histogram describes populations of quasiparticles, not the complete quantum state. The paper describes a macrostate as averaging over a small shell of microscopic states with this distribution; its notation \(|\rho_{\rm p}\rangle\) does not uniquely specify one finite-size eigenvector.
+
+A **local observable** acts within a fixed finite spatial region while the total system size grows—for example, a spin on one site or a product of spins within a fixed block. Its expectation is the mean measurement outcome, not necessarily one measurement result. Under the representative-state assumption discussed in §3.1, footnote 4, a suitably representative sequence of Bethe eigenstates approaching the macrostate gives the same limiting local expectations as the shell average. This is an assumption about representative states of that macrostate, not a claim about an arbitrary eigenstate or a universal eigenstate-thermalisation principle.
+
+**“Local expectation” does not mean an expectation in a new local eigenstate.** “Local” describes the support of the operator, not the eigenstate used in the calculation. For a finite spin chain, split the Hilbert space into a fixed region \(R\) and its complement \(\bar R\): \(\mathcal H=\mathcal H_R\otimes\mathcal H_{\bar R}\). The normalized Bethe eigenstate \(|\psi_L\rangle\) remains a state of the **whole system**, satisfying \(H_L|\psi_L\rangle=E_L|\psi_L\rangle\). If \(o_R\) acts only in \(R\), its full-system operator is \(o_R\otimes I_{\bar R}\), and
+
+\[
+\langle o_R\rangle_{\psi_L}
+=\langle\psi_L|(o_R\otimes I_{\bar R})|\psi_L\rangle
+=\operatorname{Tr}_R(\rho_R o_R),
+\qquad
+\rho_R=\operatorname{Tr}_{\bar R}|\psi_L\rangle\langle\psi_L|.
+\]
+
+The partial trace discards information accessible only through the rest of the system; it does not select a local eigenvector. The reduced density matrix \(\rho_R\) gives every expectation measurable inside \(R\). It is generally mixed because the global state can be entangled across the boundary. Only in the special case of a product state across this split does the reduced state have a single pure-state vector. Even then, that vector need not be an eigenstate of a Hamiltonian restricted to \(R\): being an eigenstate of the full Hamiltonian does not generally make a subsystem an energy eigenstate, especially when boundary interactions couple it to the rest.
+
+The sandwich \(\langle\psi_L|o|\psi_L\rangle\) is an **expectation value**, or diagonal matrix element of \(o\), not an overlap between two local eigenstates. A bare overlap \(\langle\phi|\psi\rangle\) compares two vectors with no operator insertion. One can formally view the sandwich as the inner product of \(|\psi_L\rangle\) with \(o|\psi_L\rangle\), but both vectors belong to the full-system Hilbert space; the second need not be normalized or an eigenstate.
+
+#### Which density matrix is being decomposed, and can the whole state factorize?
+
+The form “a weighted sum of pure-state projectors” is correct, but the vectors must belong to the Hilbert space on which that density matrix acts. There are two different decompositions here.
+
+For the **global GGE**, take a finite-volume regulator and mutually commuting conserved charges, including the Hamiltonian. In a complete common Bethe eigenbasis,
+
+\[
+\rho_{{\rm GGE},L}=\sum_n w_n|n_L\rangle\langle n_L|,
+\qquad
+Q_k|n_L\rangle=q_{k,n}|n_L\rangle,
+\qquad
+w_n=Z_L^{-1}e^{-\sum_k\beta_k q_{k,n}}.
+\]
+
+Here \(|n_L\rangle\in\mathcal H_R\otimes\mathcal H_{\bar R}\) is a **whole-system eigenstate**, specified by its Bethe rapidities (and any additional labels needed). Thus the interpretation “eigenstates corresponding to sets of rapidities” applies to this global decomposition. A general density matrix need not be diagonal in the energy/charge basis; this choice is justified here by the commuting-charge GGE.
+
+For the **reduced density matrix**, its spectral decomposition instead reads
+
+\[
+\rho_R=\sum_a p_a|a_R\rangle\langle a_R|,
+\qquad
+\rho_R|a_R\rangle=p_a|a_R\rangle,
+\qquad
+\langle o_R\rangle=\sum_a p_a\langle a_R|o_R|a_R\rangle.
+\]
+
+The vectors \(|a_R\rangle\in\mathcal H_R\) are eigenvectors of **\(\rho_R\)**, not generally of a Hamiltonian restricted to \(R\), and need not be Bethe eigenstates with local rapidities. Pure-state ensemble decompositions are generally nonunique and can use nonorthogonal vectors; the spectral choice uses orthonormal density-matrix eigenvectors and fixes the eigenvalues, with basis freedom inside degenerate eigenspaces.
+
+Taking the partial trace of the global GGE gives the exact relation
+
+\[
+\rho_R=\sum_n w_n\operatorname{Tr}_{\bar R}
+\bigl(|n_L\rangle\langle n_L|\bigr).
+\]
+
+Each reduced projector is generally a **mixed** density matrix because the corresponding global eigenstate can be entangled. We cannot simply use the global ket \(|n_L\rangle\) as a vector in \(\mathcal H_R\). These are finite-system quantum-mechanical identities; matching local expectations to a thermodynamic macrostate is a separate assumption below.
+
+**Can we reconstruct the global state as \(\rho_R\otimes\rho_{\bar R}\)? Generally, no.** Here \(\rho_R=\operatorname{Tr}_{\bar R}\rho\) and \(\rho_{\bar R}=\operatorname{Tr}_R\rho\). Equality
+
+\[
+\rho=\rho_R\otimes\rho_{\bar R}
+\]
+
+means that there are no correlations across this split: for every pair of subsystem observables, \(\langle A_R\otimes B_{\bar R}\rangle=\langle A_R\rangle\langle B_{\bar R}\rangle\). It is stronger than **separability**, which allows a mixture of product states with classically correlated choices. A pure global state factorizes if and only if it has no entanglement across this boundary; a mixed separable state can still fail to factorize.
+
+For example, split a Bell pair into its two qubits:
+
+\[
+|\Phi^+\rangle=\frac{|00\rangle+|11\rangle}{\sqrt2},
+\qquad
+\rho_R=\rho_{\bar R}=\frac{I_2}{2},
+\qquad
+\rho_R\otimes\rho_{\bar R}=\frac{I_4}{4}
+\ne |\Phi^+\rangle\langle\Phi^+|.
+\]
+
+The original state has \(\langle\sigma_z\otimes\sigma_z\rangle=1\), whereas the product of its marginals has zero. Partial tracing preserves all measurements within either subsystem but loses joint information. Even the separable mixture \(\tfrac12|00\rangle\langle00|+\tfrac12|11\rangle\langle11|\) has these same marginals and nonzero classical correlations, so absence of entanglement alone is insufficient for a mixed state.
+
+Interactions across the boundary and correlated equilibrium GGEs generally obstruct factorization, although special product states exist. **Homogeneous** means translation invariant, not independent sites. Likewise, the local thermodynamic ensemble equivalence in Eqs. (3.12)–(3.13) does not assert a global tensor-product state.
+
+A **homogeneous GGE** is a position-independent equilibrium ensemble: its thermodynamic parameters and mean local properties do not vary with position. Choose its parameters so that its thermodynamic quasiparticle distribution matches the same \(\rho_{\rm p}(\theta)\). Under the generalized-ensemble equivalence assumed in §3.1, this GGE and the macrostate have the same local expectations. Combining this with the representative-state assumption gives, for a normalized representative state \(|\psi_L\rangle\) and any fixed local operator \(o\),
+
+\[
+\lim_{L\to\infty}\langle\psi_L|o|\psi_L\rangle
+=\lim_{L\to\infty}\operatorname{Tr}(\rho_{{\rm GGE},L}o),
+\qquad
+\rho_{{\rm GGE},L}=Z_L^{-1}e^{-\sum_i\beta_iQ_i}.
+\]
+
+Here the large-system limit keeps particle density fixed. These are the **thermodynamic expectations**: expectation values after taking that limit. Equation (3.13) states the macrostate–GGE comparison; the arrow in Eq. (3.12) abbreviates this local equivalence, not equality of global density matrices.
+
+For this homogeneous stationary GGE, each \(\beta_i\) is a fixed number, independent of \(x\) and \(t\), while \(Q_i=\int_0^L dx\,q_i(x)\) is a global operator on the entire system. Homogeneity follows from translation-invariant charges; stationarity follows from \([H_L,Q_i]=0\), which implies \([H_L,\rho_{{\rm GGE},L}]=0\). The parameters do not become functions \(\beta_i(x,t)\) until we introduce the separate local-equilibrium description of an inhomogeneous state.
+
+For a fixed finite region \(R\) of a spin chain, write the observable as \(o=o_R\otimes I_{\bar R}\). The GGE expectation obeys the exact finite-size identity
+
+\[
+\operatorname{Tr}_{R\bar R}\!\left[
+\rho_{{\rm GGE},L}(o_R\otimes I_{\bar R})\right]
+=\operatorname{Tr}_R\!\left[\rho^{\rm GGE}_{R,L}o_R\right],
+\qquad
+\rho^{\rm GGE}_{R,L}
+=\operatorname{Tr}_{\bar R}\rho_{{\rm GGE},L}.
+\]
+
+Define likewise \(\rho^\psi_{R,L}=\operatorname{Tr}_{\bar R}|\psi_L\rangle\langle\psi_L|\). The ensemble-equivalence statement therefore says
+
+\[
+\lim_{L\to\infty}
+\operatorname{Tr}_R\!\left[
+(\rho^\psi_{R,L}-\rho^{\rm GGE}_{R,L})o_R\right]=0
+\]
+
+for every observable supported in each fixed finite \(R\), under the representative-state and ensemble-equivalence assumptions. The partial-trace identity is exact for every \(L\); agreement between the two reduced states is the thermodynamic claim. Agreement for one observable alone would not identify a reduced state, whereas agreement for all operators on a finite-dimensional region identifies its limiting reduced density matrix when that limit exists.
+
+A pure whole-system state can have a mixed description in a small region because that region is entangled with the rest. Thus matching all local expectations means matching the reduced descriptions seen in each fixed finite region in the thermodynamic limit; it does **not** mean \(|\psi_L\rangle\langle\psi_L|=\rho_{{\rm GGE},L}\). An intuitive analogy is one detailed arrangement versus a statistical collection of arrangements that gives the same results for small-window measurements: agreement through those windows does not make the whole objects identical. This is not an exact finite-size identification. It is also distinct from §3.2's additional Euler-scale approximation of an inhomogeneous evolving state by a local GGE.
 
 Quasiparticle variables help because one distribution organizes the populations carrying the different conserved charges. We will later use their one-particle charge values \(h_i(\theta)\) to obtain explicit charge and current formulas.
 
@@ -750,7 +865,9 @@ The first term is the bare density of modes. The second term accounts for their 
 
 ### Dressing solves the background dependence
 
-Substitute \(\rho_{\rm p}=n\rho_{\rm s}\) into the counting equation:
+Suppose the filling \(n(\theta)\) is our chosen description of the stationary state. We know the fraction of modes occupied at each rapidity, but we still need the number of available modes \(\rho_{\rm s}(\theta)\). Equation (3.4) determines that number from the occupied density, while Eq. (3.6) says that the occupied density is \(n\rho_{\rm s}\). Thus the unknown available density enters its own scattering correction. We call the equation self-consistent because its solution must agree with the background occupation used to calculate that correction.
+
+Substituting \(\rho_{\rm p}=n\rho_{\rm s}\) into the counting equation makes this dependence explicit:
 
 \[
 \rho_{\rm s}(\theta)=\frac{p'(\theta)}{2\pi}
@@ -758,6 +875,26 @@ Substitute \(\rho_{\rm p}=n\rho_{\rm s}\) into the counting equation:
 \]
 
 Given a filling, we can solve this integral equation for \(\rho_{\rm s}\), then recover \(\rho_{\rm p}\). Under the appropriate solvability conditions, either \(n\) or \(\rho_{\rm p}\) describes the state.
+
+To see the algebra behind the solution, set \(f(\theta)=2\pi\rho_{\rm s}(\theta)\). Multiplying Eq. (3.7) by \(2\pi\) gives
+
+\[
+f(\theta)=p'(\theta)+\int d\alpha\,T(\theta,\alpha)n(\alpha)f(\alpha).
+\]
+
+Define \(Tn\) by its action on a function:
+\((Tnf)(\theta)=\int d\alpha\,T(\theta,\alpha)n(\alpha)f(\alpha)\).
+The equation is then \(f=p'+Tnf\), or \((1-Tn)f=p'\), where \(1\) is the identity operation on functions. If this operation is invertible in the state under consideration, solving gives \(f=(1-Tn)^{-1}p'\), Eq. (3.8). The inverse is the inverse of an integral operator, not the pointwise reciprocal of \(1-T(\theta,\alpha)n(\alpha)\).
+
+The physical interpretation is that scattering phases modify the relation between rapidity and the allowed Bethe quantum numbers, so they change the density of available modes relative to the bare value \(p'/(2\pi)\). Each occupied background mode contributes to this correction, which is why the integrand contains \(\rho_{\rm p}=n\rho_{\rm s}\). This is a counting relation for a stationary interacting state; it does not describe particles dynamically moving between free modes.
+
+The inverse in Eq. (3.8) is an integral-operator inverse. It is different from the **inverse scattering method**, which reconstructs an integrable field or potential from scattering data. Here the kernel \(T\) and filling \(n\) are already specified, and we solve a linear integral equation for \(f\). A possible numerical method is fixed-point iteration,
+
+\[
+f^{(m+1)}=p'+Tn f^{(m)}.
+\]
+
+Starting with \(f^{(0)}=p'\) produces successive partial sums of \(p'+Tnp'+(Tn)^2p'+\cdots\). This iteration requires a convergence condition, such as the operator norm of \(Tn\) being less than one in a suitable function space. The integral equation can be invertible even when this simple iteration fails to converge; discretizing it and solving the resulting linear system is another option.
 
 The paper uses this same equation structure to define the **dressing** of a function \(h\):
 
@@ -771,7 +908,8 @@ Dressing modifies a bare quantity through its dependence on the occupied backgro
 \[
 h^{\rm dr}=(1-Tn)^{-1}h, \tag{3.9}
 \]
-\[ 2\pi\rho_{\rm s}=(p')^{\rm dr}. \tag{from 3.8}
+\[
+\qquad 2\pi\rho_{\rm s}=(p')^{\rm dr}. \tag{from 3.8}
 \]
 
 The order in \(Tn\) matters: \(n\) multiplies the integrated variable before the kernel acts,
@@ -785,6 +923,274 @@ By contrast, \((nTh)(\theta)=n(\theta)\int d\alpha\,T(\theta,\alpha)h(\alpha)\).
 When \(T=0\), dressing disappears: \(h^{\rm dr}=h\), and \(\rho_{\rm s}=p'/(2\pi)\) no longer depends on the filling. In an interacting model, changing \(n\) changes the background entering the integral equation and can change the available-mode density.
 
 This completes the first part of our microscopic description. We can specify a stationary background by a rapidity distribution or filling and calculate its dressed quantities. Dressing already affects Euler propagation; it does not, by itself, provide the diffusion term. The next part of §3.1 will connect these state variables to thermodynamic sources, statistics, and charge/current data. Later, particle–hole correlations will supply the remaining information for \(\mathfrak L\).
+
+### Pseudoenergy describes how strongly a mode is occupied
+
+The dressing equation takes the filling \(n(\theta)\) as known. Our next question is how that filling is related to the GGE sources \(\beta_i\). The first step is to introduce a variable for the statistical preference between an occupied mode and a hole. For fermionic Bethe occupation, the paper uses the dimensionless pseudoenergy \(\epsilon(\theta)\) through
+
+\[
+n(\theta)=\frac{1}{1+e^{\epsilon(\theta)}},
+\qquad
+\epsilon(\theta)=\log\frac{1-n(\theta)}{n(\theta)}
+=\log\frac{\rho_{\rm h}(\theta)}{\rho_{\rm p}(\theta)}.
+\]
+
+The ratio formula assumes \(0\lt n\lt 1\); completely empty or full modes are its infinite-pseudoenergy limits. A positive pseudoenergy means holes outnumber occupied modes, while a negative pseudoenergy means occupied modes outnumber holes. Thus \(\epsilon=0\) corresponds to \(n=1/2\), and increasing \(\epsilon\) suppresses occupation.
+
+This relation follows from the statistics function immediately preceding Eq. (3.10). The paper calls that function \(F(\epsilon)\); here we write \(\mathcal F(\epsilon)\) to distinguish it from the current equation of state \(F_i(\bar q)\). For fermionic modes,
+
+\[
+\mathcal F(\epsilon)=-\log(1+e^{-\epsilon}),
+\qquad
+n=\frac{d\mathcal F}{d\epsilon}
+=\frac{1}{1+e^\epsilon}.
+\]
+
+The exponential has a dimensionless argument. Consequently pseudoenergy is not generally the microscopic energy \(E(\theta)\) of a quasiparticle. In a free ordinary grand-canonical ensemble, it reduces to \(\beta[E(\theta)-\mu]\). An interacting GGE must determine it from its thermodynamic sources and the background through a further equation.
+
+We have therefore reparametrized the filling, not yet calculated it from the sources. The sequence is: determine \(\epsilon\) from GGE thermodynamics, obtain \(n\) from the occupation formula, and then use \(n\) in the dressing equation. The thermodynamic equation for \(\epsilon\), Eq. (3.14), is the next step to study. The fermionic filling formula by itself does not assert that all Bethe modes are independent in the interacting state.
+
+### The GGE sources determine the pseudoenergy through the TBA equation
+
+We now know how to obtain a filling from a pseudoenergy, but the GGE initially supplies the sources \(\beta_i\). To connect them, let \(h_i(\theta)\) be the value of conserved charge \(Q_i\) carried by one quasiparticle of rapidity \(\theta\). The source contribution of that quasiparticle to the GGE exponent is
+
+\[
+d(\theta)=\sum_i\beta_i h_i(\theta).
+\]
+
+For additive Bethe charges, an eigenstate with roots \(\{\theta_a\}\) has charge eigenvalues given by sums of these one-particle values, up to any fixed reference-state constants. Its relative GGE weight is therefore \(\exp[-\sum_a d(\theta_a)]\). This explains why \(d\) is the bare thermodynamic driving term. In an ordinary grand-canonical ensemble it is \(\beta[E(\theta)-\mu]\) for particles carrying unit particle number.
+
+The paper states that the pseudoenergy is determined by
+
+\[
+\epsilon(\theta)=d(\theta)+
+\int d\alpha\,T(\theta,\alpha)\mathcal F(\epsilon(\alpha)). \tag{3.14}
+\]
+
+For fermionic Bethe occupation, \(\mathcal F(\epsilon)=-\log(1+e^{-\epsilon})\), so this becomes
+
+\[
+\boxed{\epsilon(\theta)=d(\theta)-
+\int d\alpha\,T(\theta,\alpha)
+\log(1+e^{-\epsilon(\alpha)}) .}
+\]
+
+The first term comes directly from the GGE sources. The integral accounts for the effect of scattering on the thermodynamic mode counting. Occupied roots change the available modes through Eq. (3.4), so the entropy of a distribution and the equilibrium filling cannot be obtained by filling an unchanged free-mode list. The correction depends on the occupations of the surrounding rapidities through their pseudoenergies. The sign of its effect depends on the scattering kernel.
+
+This interpretation identifies the job of each term; it is not yet a derivation of Eq. (3.14). That derivation requires maximizing entropy subject to the GGE charge constraints, while imposing the Bethe mode-counting relation. We have not worked through that variational calculation here.
+
+For \(T=0\), the equation reduces to \(\epsilon=d\), and hence \(n=1/(1+e^d)\). With scattering, \(\epsilon\) occurs inside the logarithm on the right, so determining it is a nonlinear integral problem. This differs from dressing, which is a linear equation once \(n\) is fixed. In particular, Eq. (3.14) does not say that \(\epsilon=d^{\rm dr}\).
+
+The state construction is now explicit: specify the sources or a well-defined driving function \(d\), solve the TBA equation for \(\epsilon\), obtain the filling \(n\), and use it to solve the mode-density and dressing equations. The paper emphasizes that the infinite source sum is formal unless its charges and convergence are specified; the driving function \(d(\theta)\) can be taken as the more direct state input.
+
+### Recover the hydrodynamic densities by counting quasiparticle charges
+
+The TBA equation determines the filling, and the mode-counting equation then gives \(\rho_{\rm p}=n\rho_{\rm s}\). We can now return to the original hydrodynamic question: what mean conserved densities does this stationary state have?
+
+An occupied quasiparticle with rapidity \(\theta\) carries the charge value \(h_i(\theta)\). A rapidity bin contains approximately \(L\rho_{\rm p}(\theta)d\theta\) such particles, so its contribution to charge per length is \(h_i(\theta)\rho_{\rm p}(\theta)d\theta\). Summing all bins gives the paper's formula
+
+\[
+\boxed{\bar q_i=\int d\theta\,h_i(\theta)\rho_{\rm p}(\theta).} \tag{3.16}
+\]
+
+We can also obtain this directly from an additive finite-size Bethe charge:
+
+\[
+Q_i|\psi_L\rangle=
+\left[\sum_{a=1}^N h_i(\theta_a)\right]|\psi_L\rangle,
+\qquad
+\lim_{L\to\infty}\frac1L\sum_{a=1}^N h_i(\theta_a)
+=\int d\theta\,h_i(\theta)\rho_{\rm p}(\theta).
+\]
+
+We use the paper's charge normalization; any reference-state density must be included separately if a model retains one. Homogeneity identifies the total-charge expectation per length with the local density mean. The representative-state and ensemble-equivalence assumptions then allow the same thermodynamic value to be used in the corresponding GGE. The paper introduces Eq. (3.16) by differentiating its thermodynamic free energy; charge counting gives a direct explanation of the resulting formula without performing that separate derivation.
+
+For particle number, \(h_N(\theta)=1\), hence \(\bar q_N=\int d\theta\,\rho_{\rm p}\). For energy and momentum, the corresponding weights are the one-particle eigenvalues \(E(\theta)\) and \(p(\theta)\). A single root distribution therefore specifies many different conserved densities through different weights.
+
+The integrand uses \(h_i\), not \(h_i^{\rm dr}\). This formula counts the additive microscopic charge carried by the occupied roots. The interacting thermodynamic background already enters through the state-dependent distribution \(\rho_{\rm p}\); no replacement by dressed charge is needed for this counting formula. Dressing will also enter other quantities, such as responses and propagation.
+
+Equation (3.16) is evaluated in one homogeneous stationary GGE. Homogeneity makes \(\langle q_i(x,t)\rangle\) independent of \(x\), while stationarity makes it independent of \(t\). Consequently the right-hand side is a constant for that chosen state. These are two distinct properties: spatial uniformity alone would not make a general state stationary. The local operator \(q_i(x,t)\) still has position and Heisenberg-time dependence; only its one-point expectation is constant. Different stationary GGEs can have different values of this constant because their root distributions differ.
+
+Our state construction has now reached the hydrodynamic density:
+\(\beta_i\to d\to\epsilon\to n\to\rho_{\rm p}\to\bar q_i\).
+The next question is how the same occupied quasiparticles determine a current, which requires their effective velocities.
+
+### A current counts the charge crossing a point
+
+The density formula counts the charge present per physical length. To obtain a current, we need the charge crossing a spatial point per unit time. The paper gives
+
+\[
+\boxed{\bar j_i=\int d\theta\,
+\rho_{\rm p}(\theta)v^{\rm eff}(\theta)h_i(\theta).} \tag{3.18}
+\]
+
+For quasiparticles in a small rapidity interval, \(\rho_{\rm p}(\theta)d\theta\) is their number per length. Multiplying it by their effective velocity gives the signed number crossing a point per time, and multiplying by \(h_i(\theta)\) gives the charge they carry across that point. Right-moving and left-moving quasiparticles make contributions with opposite velocity signs.
+
+This is the physical interpretation of the current formula, not a microscopic proof for a generic quantum model. The paper cites established results and gives an alternative derivation in Appendix D. The simple transport picture helps explain the factors in a result that still requires that derivation.
+
+The effective velocity is the propagation velocity in the occupied background. In an interacting integrable system, scattering changes quasiparticle trajectories, and the surrounding distribution affects this velocity. It need not equal the bare group velocity \(v^{\rm bare}(\theta)=dE/dp=E'(\theta)/p'(\theta)\). We have not yet solved for \(v^{\rm eff}\); Eqs. (3.19)–(3.20) supply the next step. This state-dependent velocity already describes Euler transport and should not be identified with the diffusion coefficient.
+
+To understand the bare group velocity, first consider a narrow packet built from momentum eigenstates near \(p_0\):
+
+\[
+\psi(x,t)=\int dp\,a(p)e^{i[px-E(p)t]/\hbar}.
+\]
+
+Expand the dispersion to first order, \(E(p)\simeq E(p_0)+E_p'(p_0)(p-p_0)\). The packet envelope then depends on \(x-E_p'(p_0)t\), so its centre moves at \(dE/dp\). This is the group velocity; it describes motion of the envelope rather than the phase velocity \(E/p\) of an individual plane wave. Higher dispersion derivatives can deform or spread the packet even in a free model; such dispersive spreading is not automatically hydrodynamic diffusion.
+
+In Bethe notation, momentum and energy are parametrized by rapidity: \(p=p(\theta)\), \(E=E(\theta)\). The chain rule gives \(dE/dp=E'(\theta)/p'(\theta)\), where the primes now denote rapidity derivatives. For a nonrelativistic particle with \(E=p^2/(2m)\), this is \(p/m\). The word “bare” means that we use the model's one-quasiparticle dispersion before including the trajectory shifts from scattering with an occupied background. It does not mean that the full interacting Hamiltonian has been replaced by a free Hamiltonian. The same bare dispersion can therefore coexist with state-dependent effective propagation velocities.
+
+For particle number, \(h_N=1\), Eq. (3.18) becomes \(\bar j_N=\int d\theta\,\rho_{\rm p}v^{\rm eff}\). For energy, the weight is \(E(\theta)\). As a simple illustration, equal number densities \(a\) moving at velocities \(+v\) and \(-v\) give number density \(2a\) and number current \(av-av=0\). The density can be nonzero while the signed current cancels.
+
+We are still evaluating a homogeneous stationary GGE. Its current mean, like its density mean, is independent of \(x\) and \(t\). It can nevertheless be nonzero: continuity requires \(\partial_x\bar j_i=0\) when the density is stationary, not \(\bar j_i=0\). A constant flow transports charge through the region without changing its mean density.
+
+Together, Eqs. (3.16) and (3.18) describe the same state in terms of its density vector and current vector. Where densities locally parametrize the stationary-state family, these quasiparticle formulas determine the equation of state \(F_i(\bar q)\) introduced in §2.1. We have thus supplied a concrete meaning for that earlier function. Its evaluation still requires the effective velocity, which we will calculate next.
+
+### Effective velocity includes scattering with the occupied background
+
+The bare group velocity follows the one-particle dispersion. In a populated interacting state, a quasiparticle also encounters other quasiparticles. The scattering phases produce shifts of its trajectory, so its mean propagation velocity depends on that background. The paper expresses this dependence as
+
+\[
+\boxed{
+v^{\rm eff}(\theta)=v^{\rm bare}(\theta)
+-\int d\alpha\,\frac{T(\theta,\alpha)}{p'(\theta)}
+\rho_{\rm p}(\alpha)
+\big[v^{\rm eff}(\theta)-v^{\rm eff}(\alpha)\big].
+} \tag{3.19, as printed}
+\]
+
+The occupied density \(\rho_{\rm p}(\alpha)\) supplies the number of background quasiparticles in a rapidity interval. The difference of effective velocities describes their relative motion: faster quasiparticles overtake slower ones. The scattering kernel weights how those encounters shift trajectories. The signed difference and scattering convention together determine the correction; scattering need not always reduce the speed. There is an apparent normalization discrepancy in the printed equation: with \(T\) defined by Eq. (3.3), the scattering term requires a factor \(2\pi\) to agree with Eqs. (3.8)–(3.9), (3.20). The calculation below explains this correction; it is not an author-confirmed erratum.
+
+If the two effective velocities agree, that rapidity interval contributes zero to this correction. There is no relative motion between those trajectories. If the scattering kernel is zero, or the background is empty, the entire correction vanishes and \(v^{\rm eff}=v^{\rm bare}\).
+
+We use this as a physical interpretation of the paper's equation, not a full microscopic derivation. The equation couples the unknown velocity at \(\theta\) to the unknown velocities of all populated rapidities. At fixed \(\rho_{\rm p}\), it is a linear integral equation for \(v^{\rm eff}\); unlike the pseudoenergy equation, it does not contain a nonlinear function of the unknown.
+
+This effective velocity is a mean propagation velocity in a fixed stationary state, so the correction already belongs to Euler hydrodynamics. Calculating additional fluctuation-induced diffusive spreading remains a later task. The next step will express this same velocity using the dressing operation, as in Eq. (3.20).
+
+### From the scattering amplitude to a spatial trajectory shift
+
+For the scalar elastic scattering considered here, write the two-body amplitude for real rapidities as \(S(\theta,\alpha)=e^{i\phi(\theta,\alpha)}\), where \(\phi\) is the scattering phase. This amplitude is not a scattering probability: its phase affects the outgoing wave packet even when its modulus is one and the asymptotic rapidities are preserved. Equation (3.3) gives
+
+\[
+T(\theta,\alpha)=\frac{1}{2\pi}\partial_\theta\phi(\theta,\alpha).
+\]
+
+We can see what this derivative means from a narrow packet, using \(\hbar=1\). A packet is a superposition of nearby momenta, not a single plane wave:
+
+\[
+\psi(x,t)=\int dp\,a(p)e^{i\Phi(p;x,t)},
+\qquad
+\Phi(p;x,t)=px-E(p)t+\phi(p,\alpha).
+\]
+
+Assume that \(a(p)\) is concentrated near \(p_0\), with a simple initially centred envelope and no additional rapidly varying phase in \(a\). Each momentum component contributes a complex amplitude at the chosen point \(x,t\). If their phases vary rapidly across the occupied momentum range, their contributions point in different directions in the complex plane and largely cancel. If their phases change little across that range, their contributions reinforce one another and the packet amplitude is large.
+
+For two nearby components, the phase difference is
+
+\[
+\Phi(p+\delta p;x,t)-\Phi(p;x,t)
+\simeq \partial_p\Phi(p;x,t)\,\delta p.
+\]
+
+The condition \(\partial_p\Phi=0\) eliminates the first-order phase difference. “Stationary” here means stationary as a function of the integration variable \(p\), not a particle at rest or a phase constant in time. In a narrow packet, this condition identifies its leading envelope trajectory when it holds near the central momentum.
+
+We can make the envelope explicit by writing \(p=p_0+q\), expanding \(E\) and \(\phi\) to first order, and fixing the partner rapidity \(\alpha\):
+
+\[
+\psi(x,t)\simeq e^{i\Phi(p_0;x,t)}
+\int dq\,a(p_0+q)e^{iqX},
+\qquad
+X=x-v^{\rm bare}(p_0)t+\partial_p\phi(p_0,\alpha).
+\]
+
+The integral is the Fourier transform of the momentum envelope, evaluated at \(X\). For an initially centred Gaussian amplitude \(a(p_0+q)\propto e^{-q^2/(4\sigma_p^2)}\), it is proportional to \(e^{-\sigma_p^2X^2}\). Its magnitude is largest at \(X=0\), giving the same condition as stationary phase. At sufficiently large \(|X|\), the momentum components cancel strongly. Higher derivatives can change the packet's shape; the first-order calculation identifies its leading displacement. An initial momentum-dependent phase would also contribute its derivative and locate the initial centre.
+
+In the convention where the outgoing packet gains \(e^{i\phi}\), the stationary-phase condition at fixed \(\alpha\) is therefore
+
+\[
+x-\frac{dE}{dp}t+\frac{\partial\phi}{\partial p}=0.
+\]
+
+Relative to the unshifted trajectory, the packet centre therefore acquires the spatial shift
+
+\[
+\Delta x_{\theta|\alpha}
+=-\frac{\partial\phi}{\partial p}
+=-\frac{\partial_\theta\phi(\theta,\alpha)}{p'(\theta)}
+=-\frac{2\pi T(\theta,\alpha)}{p'(\theta)}.
+\]
+
+This is the shift in the stated scattering-channel convention. Reversing the ordering of the crossing corresponds to the inverse scattering factor and reverses this phase contribution. The ratio of derivatives converts a phase change with rapidity into a spatial displacement. Thus the normalization-consistent scattering length in the velocity equation is \(2\pi T/p'\), not \(T/p'\) alone.
+
+The same phase derivative appears in the Bethe mode counting. In the convention giving Eq. (3.4), the counting equation has the form \(Lp(\theta)+\sum_b\phi(\theta,\theta_b)=2\pi I\), up to constant phase offsets and self-term effects irrelevant to the bulk thermodynamic limit. Differentiating the counting function gives
+
+\[
+\rho_{\rm s}(\theta)
+=\frac{p'(\theta)}{2\pi}
++\int d\alpha\,\frac{\partial_\theta\phi(\theta,\alpha)}{2\pi}
+\rho_{\rm p}(\alpha).
+\]
+
+Consequently a single microscopic scattering phase has two related effects: it changes the density of allowed Bethe modes, and its momentum derivative shifts trajectories.
+
+To interpret the mean velocity, let \(w_{\theta\alpha}=v^{\rm eff}(\theta)-v^{\rm eff}(\alpha)\). In the trajectory picture, encounters with the \(\alpha\) population occur at rate \(\rho_{\rm p}(\alpha)d\alpha\,|w_{\theta\alpha}|\). The ordering of the crossing fixes the corresponding shift sign. Their product gives the signed contribution
+
+\[
+dv^{\rm eff}(\theta)
+=-\frac{2\pi T(\theta,\alpha)}{p'(\theta)}
+\rho_{\rm p}(\alpha)w_{\theta\alpha}\,d\alpha.
+\]
+
+Adding these shifts to the bare motion gives the normalization-consistent form
+
+\[
+v^{\rm eff}(\theta)=\frac{E'(\theta)}{p'(\theta)}
+-\int d\alpha\,\frac{2\pi T(\theta,\alpha)}{p'(\theta)}
+\rho_{\rm p}(\alpha)
+[v^{\rm eff}(\theta)-v^{\rm eff}(\alpha)].
+\]
+
+This packet argument supplies a physical interpretation. An independent algebraic check comes from the dressed ratio in Eq. (3.20). Let \(P=(p')^{\rm dr}=2\pi\rho_{\rm s}\) and \(U=(E')^{\rm dr}=v^{\rm eff}P\). Their dressing equations imply
+
+\[
+P=p'+2\pi\int d\alpha\,T(\theta,\alpha)\rho_{\rm p}(\alpha),
+\qquad
+U=E'+2\pi\int d\alpha\,T(\theta,\alpha)\rho_{\rm p}(\alpha)v^{\rm eff}(\alpha).
+\]
+
+Substituting \(U=v^{\rm eff}P\) and rearranging yields exactly the velocity equation with \(2\pi T/p'\). The printed PDF has only \(T/p'\) in Eq. (3.19), while its definitions (3.3), (3.8), (3.9), and (3.20) give the factor above. Our earlier explanation reproduced the printed coefficient without checking this normalization; the corrected interpretation retains the source discrepancy explicitly.
+
+### Dressing gives a compact expression for the effective velocity
+
+The wave-packet discussion explained the microscopic meaning of the scattering correction. We now return to the calculation of the homogeneous current: we need a usable expression for the velocity in \(\bar j_i=\int d\theta\,\rho_{\rm p}v^{\rm eff}h_i\). The paper gives
+
+\[
+\boxed{v^{\rm eff}(\theta)=
+\frac{(E')^{\rm dr}(\theta)}{(p')^{\rm dr}(\theta)}.} \tag{3.20}
+\]
+
+We can derive this ratio from the normalization-consistent scattering equation above. Multiply that equation by \(p'(\theta)\) and collect the terms containing \(v^{\rm eff}(\theta)\):
+
+\[
+v^{\rm eff}(\theta)
+\left[p'(\theta)+2\pi\int d\alpha\,T(\theta,\alpha)\rho_{\rm p}(\alpha)\right]
+=E'(\theta)+2\pi\int d\alpha\,T(\theta,\alpha)
+\rho_{\rm p}(\alpha)v^{\rm eff}(\alpha).
+\]
+
+By Eqs. (3.4), (3.8), the bracket is \(2\pi\rho_{\rm s}(\theta)=(p')^{\rm dr}(\theta)\). Set \(U(\theta)=v^{\rm eff}(\theta)(p')^{\rm dr}(\theta)\) and use
+\(2\pi\rho_{\rm p}=n(p')^{\rm dr}\). The equation becomes
+
+\[
+U(\theta)=E'(\theta)
++\int d\alpha\,T(\theta,\alpha)n(\alpha)U(\alpha).
+\]
+
+This is the dressing equation with bare input \(E'\). Where its solution is unique, \(U=(E')^{\rm dr}\), which yields Eq. (3.20). The scattering equation and the dressed ratio therefore describe the same mean propagation, with the apparent \(2\pi\) issue in the printed (3.19) kept explicit.
+
+The practical prescription is to use the same filling to dress \(E'\) and \(p'\) separately and then take their ratio. It is generally not correct to dress the ratio \(E'/p'\): dressing is linear but does not preserve quotients. Also, the notation means differentiate the bare energy or momentum with respect to rapidity first, then dress that derivative. It does not automatically mean differentiating \(E^{\rm dr}\) or \(p^{\rm dr}\).
+
+When \(T=0\), both dressing operations become identities and Eq. (3.20) reduces to \(v^{\rm bare}=E'/p'\). We have now supplied the velocity required for the current formula. Together, the TBA state construction, charge-density formula, and current formula determine the homogeneous data that will enter Euler GHD. They do not yet supply the residual current fluctuations needed to calculate diffusion.
 
 ## Supporting derivations
 
