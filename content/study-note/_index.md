@@ -8,4 +8,6 @@ banner:
   image: ''
 ---
 
-A working collection of my study notes on cold atoms, quantum many-body physics, mathematical methods, and related topics. These notes are intended as learning records rather than authoritative references; please consult the cited literature and course materials before reusing results.
+Browse by topic rather than by individual file. Each topic page gathers its main notes, concise or detailed reading, and available specialist supplements. Presentations remain in their [own collection](/presentation/).
+
+These materials are personal learning records, not authoritative references; consult the original literature and course materials before reusing results.

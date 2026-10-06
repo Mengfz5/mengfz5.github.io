@@ -10,7 +10,10 @@ tags:
   - quantum many-body physics
   - diffusion
   - integrable systems
-featured: true
+featured: false
+_build:
+  list: never
+  render: always
 math: true
 lastmod: 2026-10-06
 ---
