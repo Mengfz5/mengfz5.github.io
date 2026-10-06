@@ -47,13 +47,13 @@ sections:
       title: 'Study Note'
       subtitle: ''
       text: |-
-        Selected study notes are shown below. For the full categorized collection, visit [Study Notes](/study-note/).
+        Explore study notes by topic. Each entry gathers the main notes and related reading in one place. Browse [all study topics](/study-note/).
     design:
       columns: '1'
 
   - block: collection
     content:
-      title: Featured Study Notes
+      title: Study Topics
       filters:
         folders:
           - study-note

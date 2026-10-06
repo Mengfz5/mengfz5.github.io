@@ -10,7 +10,10 @@ tags:
   - quantum many-body physics
   - hydrodynamics
   - integrable systems
-featured: true
+featured: false
+_build:
+  list: never
+  render: always
 lastmod: 2026-10-04
 ---
 

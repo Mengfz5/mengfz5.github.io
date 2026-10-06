@@ -1,5 +1,5 @@
 ---
-title: "Symmetry Analysis for the Free Energy of Superconductors"
+title: "Superconductivity & Symmetry"
 authors:
   - admin
 date: 2025-01-24
@@ -11,6 +11,15 @@ tags:
 featured: true
 ---
 
+## Symmetry and free-energy notes
+
 This note explores the symmetry analysis of high-temperature superconductors using group theory, focusing on the Ginzburg-Landau free energy functional. It derives order parameter transformations under the symmetry group and analyzes tensor-product decompositions of irreducible representations to identify invariant terms in the free energy.
 
 [Read the PDF note](/notes/note1.pdf)
+
+## Related presentations
+
+Talks remain in the separate Presentations collection.
+
+- [Order-parameter symmetry](/presentation/superconductivity-symmetry/)
+- [Phenomenological theory of unconventional superconductivity](/presentation/unconventional-superconductivity/)
