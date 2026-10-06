@@ -10,4 +10,6 @@ main:
   - name: Study Note
     url: /study-note/
     weight: 20
-  
+  - name: Presentations
+    url: /presentation/
+    weight: 30

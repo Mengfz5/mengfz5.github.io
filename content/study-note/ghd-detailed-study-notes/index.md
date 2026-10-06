@@ -19,7 +19,7 @@ lastmod: 2026-10-06
 This study note was generated with GPT assistance during guided reading, then source-checked and tutor-reviewed. It is a personal learning reference; verify equations, conventions, and interpretations against the original paper before citing or reusing it.
 {{% /callout %}}
 
-**Companion slides:** [GHD presentation and PDF download](/study-note/ghd-presentation/). The slide deck covers the earlier material through dressing, Eq. (3.9); this detailed note continues through effective velocity, Eq. (3.20).
+**Companion slides:** [GHD presentation and PDF download](/presentation/ghd-presentation/). The slide deck covers the earlier material through dressing, Eq. (3.9); this detailed note continues through effective velocity, Eq. (3.20).
 
 J. De Nardis, D. Bernard and B. Doyon, *Diffusion in generalized hydrodynamics and quasiparticle scattering*, SciPost Phys. **6**, 049 (2019), arXiv:1812.00767v4.
 

@@ -1,4 +1,6 @@
 ---
+aliases:
+  - /study-note/ghd-presentation/
 title: "Diffusion in GHD — Presentation Slides"
 authors:
   - admin
